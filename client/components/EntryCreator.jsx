@@ -11,19 +11,24 @@
 
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { findRecord, setSearchString } from "../slices";
+import {
+  setCurrentContext,
+  setModal,
+  setCandidateRecordType,
+  setCandidateRecordName,
+  setDisplaySelector,
+} from "../slices";
 
 const EntryCreator = function (props) {
   const dispatch = useDispatch();
   const searchString = useSelector((state) => state.links.searchString);
 
-  const handleFindRecord = (e) => {
-    e.preventDefault();
-    dispatch(findRecord());
-  };
-
-  const handleSetSearchString = (e) => {
-    dispatch(setSearchString(e.target.value));
+  const handleCreateRecord = (e) => {
+    dispatch(setCurrentContext({}));
+    dispatch(setCandidateRecordType(""));
+    dispatch(setCandidateRecordName(""));
+    dispatch(setDisplaySelector("None"));
+    dispatch(setModal(true));
   };
 
   const record_types = [
@@ -37,24 +42,11 @@ const EntryCreator = function (props) {
   return (
     <div>
       <p>
-        <strong>Create Database Entry: </strong>
-      </p>
-      <form>
-        <label htmlFor="record_type">
-          {record_types}
-          <input
-            id="search-text"
-            type="text"
-            value={searchString}
-            name="input-search-text"
-            onChange={handleSetSearchString}
-          ></input>
-        </label>
-        <button name="button-searchString" onClick={handleFindRecord}>
-          Submit
+        <button name="create-record" onClick={handleCreateRecord}>
+          <strong>Create Link Entry</strong>
         </button>
-      </form>
-      <hr></hr>
+      </p>
+      {/* <hr></hr> */}
     </div>
     // -------------------------------
   );

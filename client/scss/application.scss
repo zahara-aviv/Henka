@@ -67,7 +67,7 @@ link-box {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: start;
+  justify-content: space-between;
 }
 
 .icon {
@@ -84,7 +84,6 @@ link-box {
   color: purple;
   margin-right: 1em;
 }
-
 
 .modal-cover {
   position: fixed;
@@ -151,28 +150,27 @@ link-box {
   margin-right: 17px;
 }
 
-
 .up-vote {
   display: inline-block;
   margin-left: 0.1em;
   margin-right: 0.1em;
   cursor: pointer;
-  color: #687074
+  color: #687074;
 }
 
 .down-vote {
   display: inline-block;
-  margin-left: 0.1em;
+  padding-left: 0.1em;
+  padding-right: 0.1em;
   margin-right: 0.1em;
   cursor: pointer;
-  color: #687074
-} 
-
+  color: #687074;
+}
 
 .up-vote.on {
-  color: rgb(6, 171, 6)
+  color: rgb(6, 171, 6);
 }
 
 .down-vote.on {
-  color: rgb(237, 68, 68)
+  color: rgb(237, 68, 68);
 }

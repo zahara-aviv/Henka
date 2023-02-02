@@ -19,6 +19,7 @@ import {
 } from "../slices";
 import RECORD_TYPES from "../enums";
 import getRecords from "../utils";
+import { searchRecords } from "../utils";
 
 const QueryResultCreator = function (props) {
   const dispatch = useDispatch();
@@ -30,9 +31,18 @@ const QueryResultCreator = function (props) {
     dispatch(setRecordList(results));
   };
 
-  const handleFindRecord = (e) => {
+  const handleFindRecordName = async (e) => {
     e.preventDefault();
-    dispatch(findRecord());
+    // call database for string e.target.value
+    const results = await searchRecords("record_type", searchString);
+    dispatch(setRecordList(results));
+  };
+
+  const handleFindURL = async (e) => {
+    e.preventDefault();
+    // call database for string e.target.value
+    const results = await searchRecords("uri", searchString);
+    dispatch(setRecordList(results));
   };
 
   const handleSetSearchString = (e) => {
@@ -63,9 +73,14 @@ const QueryResultCreator = function (props) {
             onChange={handleSetSearchString}
           ></input>
         </label>
-        <button name="button-searchString" onClick={handleFindRecord}>
-          Find Record
-        </button>
+        <div>
+          <button name="button-searchString" onClick={handleFindRecordName}>
+            Search By Record Name
+          </button>
+          <button name="button-searchString" onClick={handleFindURL}>
+            Search By URL / Description
+          </button>
+        </div>
       </form>
       <hr></hr>
     </div>

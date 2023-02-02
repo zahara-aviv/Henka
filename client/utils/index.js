@@ -1,6 +1,6 @@
 import RECORD_TYPES from "../enums";
 
-function getKeyByValue(object, value) {
+export function getKeyByValue(object, value) {
   return Object.keys(object).find((key) => object[key] === value);
 }
 
@@ -17,5 +17,22 @@ export default async function getRecords(key) {
     .catch((err) => {
       console.log(err);
     });
+  return results;
+}
+
+export async function searchRecords(type, searchString) {
+  const results = [];
+  await fetch("/api/search/" + searchString, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ type }),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      for (const obj of data) {
+        results.push(obj);
+      }
+    })
+    .catch((err) => console.log(err));
   return results;
 }

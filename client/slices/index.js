@@ -29,11 +29,6 @@ const linkRecordSlice = createSlice({
     setSearchString(state, action) {
       state.searchString = action.payload;
     },
-    findRecord(state, action) {
-      // query database
-      // update page with matching records.
-      state;
-    },
     addRecord(state, action) {
       state.totalRecords++;
       state.lastRecordId++;
@@ -47,15 +42,6 @@ const linkRecordSlice = createSlice({
     addLink(state, action) {
       const index = action.payload;
       state.totalLinks++;
-
-      // state.recordList = state.recordList.map((el, i) => {
-      //   if (index === i) el.numberOfLinks++;
-      //   el.percentageOfTotal = (
-      //     Math.round(10000 * (el.numberOfLinks / state.totalLinks)) / 100
-      //   ).toFixed(2);
-
-      //   return el;
-      // });
     },
     deleteLink(state, action) {
       // update the recordList
@@ -115,7 +101,6 @@ const linkRecordSlice = createSlice({
 });
 
 export const {
-  findRecord,
   addRecord,
   setSearchString,
   addLink,

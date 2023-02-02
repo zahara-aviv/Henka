@@ -6,8 +6,12 @@ import {
   setCandidateRecordName,
   setCandidateRecordURL,
   setCandidateRecordDescription,
+  setRecordList,
+  setModal,
 } from "../slices";
 import { VALID_RECORD_TYPES, STATE_NAMES, COUNTRY_NAMES } from "../enums";
+import getRecords from "../utils";
+import { getKeyByValue } from "../utils";
 
 export const Form = (props) => {
   const dispatch = useDispatch();
@@ -71,23 +75,28 @@ export const Form = (props) => {
   const updateDescription = (e) => {
     dispatch(setCandidateRecordDescription(e.target.value));
   };
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    if ("record_type" in currentContext && "record_name" in currentContext) {
-      const { record_type_id, record_type, record_name } = currentContext;
-      const body = JSON.stringify({
-        record_type_id,
-        record_name,
-        record_type,
-        url: recordURL,
-        description: recordDescription,
-      });
-      fetch("/");
-
-      // add record for link
-      // add confidence record
-      // add link record
+    // post results to database
+    const body = {
+      record_name: recordName,
+      record_type: getKeyByValue(VALID_RECORD_TYPES, recordType),
+      url: recordURL,
+      description: recordDescription,
+    };
+    if ("record_type_id" in currentContext) {
+      body["record_type_id"] = currentContext.record_type_id;
     }
+    // console.log(body);
+    await fetch("/api/record", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    }).catch((err) => console.log(err));
+    // update records
+    const results = await getRecords(recordType);
+    dispatch(setRecordList(results));
+    dispatch(setModal(false));
   };
   return (
     <form onSubmit={onSubmit}>

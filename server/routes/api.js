@@ -4,10 +4,6 @@ const linkRecordController = require("../controllers/linkRecordController");
 
 const router = express.Router();
 
-router.get("/", linkRecordController.getLinks, (req, res) =>
-  res.sendStatus(200)
-);
-
 router.delete("/id/:id", linkRecordController.deleteByID, (req, res) =>
   res.sendStatus(200)
 );
@@ -22,8 +18,10 @@ router.get(
   (req, res) => res.status(200).json(res.locals.records)
 );
 
-router.post("/search", linkRecordController.getSearchResults, (req, res) =>
-  res.status(200).json(res.locals.searchResults)
+router.post(
+  "/search/:text",
+  linkRecordController.getSearchResults,
+  (req, res) => res.status(200).json(res.locals.searchResults)
 );
 
 // /?id=1234
@@ -32,7 +30,7 @@ router.get("/id", linkRecordController.getByID, (req, res) =>
 );
 
 router.post("/record", linkRecordController.addLinkRecord, (req, res) => {
-  res.sendStatus(200);
+  res.sendStatus(204);
 });
 
 module.exports = router;

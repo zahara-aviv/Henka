@@ -17,7 +17,6 @@ import EntryDisplay from "../components/EntryDisplay.jsx";
 const EntryContainer = (props) => (
   <div className="innerbox">
     <EntryCreator />
-    <EntryDisplay />
   </div>
 );
 
