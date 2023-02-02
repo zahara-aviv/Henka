@@ -1,8 +1,72 @@
-const RECORD_TYPES = {
-  "*": "All",
+const VALID_RECORD_TYPES = {
   state_name: "State",
   company_name: "Company",
   country_name: "Country",
 };
 
-export default RECORD_TYPES;
+const RECORD_TYPES = {
+  "*": "All",
+  ...VALID_RECORD_TYPES,
+};
+
+const COUNTRY_NAMES = ["United States"];
+
+const STATE_NAMES = [
+  "Alabama",
+  "Alaska",
+  "Arizona",
+  "Arkansas",
+  "California",
+  "Colorado",
+  "Connecticut",
+  "Delaware",
+  "Florida",
+  "Georgia",
+  "Hawaii",
+  "Idaho",
+  "Illinois",
+  "Indiana",
+  "Iowa",
+  "Kansas",
+  "Kentucky",
+  "Louisiana",
+  "Maine",
+  "Maryland",
+  "Massachusetts",
+  "Michigan",
+  "Minnesota",
+  "Mississippi",
+  "Missouri",
+  "Montana",
+  "Nebraska",
+  "Nevada",
+  "New Hampshire",
+  "New Jersey",
+  "New Mexico",
+  "New York",
+  "North Carolina",
+  "North Dakota",
+  "Ohio",
+  "Oklahoma",
+  "Oregon",
+  "Pennsylvania",
+  "Rhode Island",
+  "South Carolina",
+  "South Dakota",
+  "Tennessee",
+  "Texas",
+  "Utah",
+  "Vermont",
+  "Virginia",
+  "Washington",
+  "West Virginia",
+  "Wisconsin",
+  "Wyoming",
+];
+
+export {
+  STATE_NAMES,
+  COUNTRY_NAMES,
+  VALID_RECORD_TYPES,
+  RECORD_TYPES as default,
+};

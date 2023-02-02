@@ -20,23 +20,28 @@ import EntryContainer from "./EntryContainer.jsx";
 import ModalContainer from "./ModalContainer.jsx";
 
 function MainContainer(props) {
-  const triggerText = 'Open form';
+  const triggerText = "Open form";
   const onSubmit = (event) => {
     event.preventDefault(event);
     console.log(event.target.name.value);
-    console.log(event.target.email.value);
+    console.log(event.target.url - link.value);
   };
   const isShown = useSelector((state) => state.links.showModal);
   const dispatch = useDispatch();
   const setModalState = (e) => dispatch(setModal(e));
-  return  (
+  return (
     <div className="container">
       <div className="outerBox">
         <h1 id="header">Name Change Resource Database</h1>
         <SummaryDisplay />
         <QueryContainer />
         <EntryContainer />
-        <ModalContainer isShown={isShown} triggerText={triggerText} onSubmit={onSubmit} setModal={setModalState}/>
+        <ModalContainer
+          isShown={isShown}
+          triggerText={triggerText}
+          onSubmit={onSubmit}
+          setModal={setModalState}
+        />
       </div>
     </div>
   );

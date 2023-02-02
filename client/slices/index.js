@@ -1,15 +1,22 @@
 import { createSlice } from "@reduxjs/toolkit";
 import RECORD_TYPES from "../enums";
+import { STATE_NAMES } from "../enums";
 
 const initialState = {
   //convert to an immutable type
   totalRecords: 0,
   recordType: RECORD_TYPES["*"],
   showModal: false,
+  displaySelector: RECORD_TYPES["state_name"],
   totalLinks: 0,
-  recordList: [], 
+  recordList: [],
   deleteLinkList: {},
-  candidaterecordList: [], 
+  candidateRecordName: "",
+  candidateRecordType: RECORD_TYPES["state_name"],
+  candidateRecordURL: "",
+  candidateDescription: "",
+  candidateRecordList: [],
+  currentContext: {},
   lastRecordId: 0,
   searchString: "",
   buttonStates: {},
@@ -72,20 +79,38 @@ const linkRecordSlice = createSlice({
       state.totalRecords = state.recordList.length;
     },
     setCandidateRecordList(state, action) {
-      state.candidaterecordList =  action.payload;
+      state.candidaterecordList = action.payload;
     },
     setDeletedLink(state, action) {
       if (state.deleteLinkList[action.payload])
-        state.deleteLinkList[action.payload] = !state.deleteLinkList[action.payload];
-      else 
-        state.deleteLinkList[action.payload] = true;
+        state.deleteLinkList[action.payload] =
+          !state.deleteLinkList[action.payload];
+      else state.deleteLinkList[action.payload] = true;
     },
     setModal(state, action) {
       state.showModal = action.payload;
     },
-    setButtonState (state, action) {
+    setButtonState(state, action) {
       state.buttonStates[action.payload._id] = action.payload.state;
-    }
+    },
+    setCandidateRecordType(state, action) {
+      state.candidateRecordType = action.payload;
+    },
+    setDisplaySelector(state, action) {
+      state.displaySelector = action.payload;
+    },
+    setCandidateRecordName(state, action) {
+      state.candidateRecordName = action.payload;
+    },
+    setCurrentContext(state, action) {
+      state.currentContext = action.payload;
+    },
+    setCandidateRecordURL(state, action) {
+      state.candidateRecordURL = action.payload;
+    },
+    setCandidateRecordDescription(state, action) {
+      state.candidateDescription = action.payload;
+    },
   },
 });
 
@@ -97,10 +122,16 @@ export const {
   deleteLink,
   setRecordType,
   setRecordList,
+  setCandidateRecordName,
   setCandidateRecordList,
+  setCandidateRecordType,
   setDeletedLink,
   setModal,
   setButtonState,
+  setDisplaySelector,
+  setCurrentContext,
+  setCandidateRecordURL,
+  setCandidateRecordDescription,
 } = linkRecordSlice.actions;
 
 export default linkRecordSlice.reducer;

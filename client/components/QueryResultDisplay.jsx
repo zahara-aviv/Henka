@@ -69,10 +69,9 @@ const QueryResultDisplay = (props) => {
   const links = [];
   const calculateHealth = (up, down) => {
     const result = Math.round(100 * eval(`${up} / (${down} + ${up})`));
-    if (isNaN(result))
-      return 0;
-    return result;    
-  }
+    if (isNaN(result)) return 0;
+    return result;
+  };
   recordList.forEach((link) => {
     links.push(
       <QueryResult
@@ -81,22 +80,23 @@ const QueryResultDisplay = (props) => {
         urlID={link.uri_id}
         _ID={link._id}
         confID={link.confidence_id}
+        recordName={
+          link.company_name[0] !== null
+            ? link.company_name[0]
+            : link.state_name[0] !== null
+            ? link.state_name[0]
+            : link.country_name[0]
+        }
         linkList={Array.isArray(link.url) ? link.url : [link.url]}
         description={link.description}
         recordType={
-          link.state_name
+          link.state_name[0] !== null
             ? RECORD_TYPES.state_name
-            : link.country_name
+            : link.country_name[0] !== null
             ? RECORD_TYPES.country_name
             : RECORD_TYPES.company_name
         }
-        recordName={
-          link.state_name
-            ? link.state_name
-            : link.country_name
-            ? link.country_name
-            : link.company_name
-        }
+        recordTypeID={Number(link.record_type_id)}
         upVotes={link.upvote}
         downVotes={link.downvote}
         health={

@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
-import { Modal } from '../components/Modal.jsx';
-
+import React, { Component } from "react";
+import { Modal } from "../components/Modal.jsx";
 
 export class ModalContainer extends Component {
   constructor(props) {
@@ -23,20 +22,19 @@ export class ModalContainer extends Component {
   };
   onClickOutside = (event) => {
     if (this.modal && this.modal.contains(event.target)) return;
-      this.closeModal();
+    this.closeModal();
   };
 
   toggleScrollLock = () => {
-    document.querySelector('html').classList.toggle('scroll-lock');
+    document.querySelector("html").classList.toggle("scroll-lock");
   };
   render = () => {
     return (
       <React.Fragment>
         {this.props.isShown ? (
           <Modal
-            onSubmit={this.props.onSubmit}
-            modalRef={(n) =>  this.modal = n}
-            buttonRef={(n) => this.closeButton = n}
+            modalRef={(n) => (this.modal = n)}
+            buttonRef={(n) => (this.closeButton = n)}
             closeModal={this.closeModal}
             onKeyDown={this.onKeyDown}
             onClickOutside={this.onClickOutside}
@@ -44,7 +42,7 @@ export class ModalContainer extends Component {
         ) : null}
       </React.Fragment>
     );
-  }
+  };
 }
 
 export default ModalContainer;
