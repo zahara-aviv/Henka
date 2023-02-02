@@ -1,13 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
-//TODO: could remove since Immer allows mutation in the Slice
+import RECORD_TYPES from "../enums";
 
 const initialState = {
   //convert to an immutable type
   totalRecords: 0,
+  recordType: RECORD_TYPES["*"],
+  showModal: false,
   totalLinks: 0,
-  recordList: [], //could refactor to an object
+  recordList: [], 
+  deleteLinkList: {},
+  candidaterecordList: [], 
   lastRecordId: 0,
   searchString: "",
+  buttonStates: {},
 };
 
 const linkRecordSlice = createSlice({
@@ -59,10 +64,43 @@ const linkRecordSlice = createSlice({
       //   return elem;
       // });
     },
+    setRecordType(state, action) {
+      state.recordType = action.payload;
+    },
+    setRecordList(state, action) {
+      state.recordList = action.payload;
+      state.totalRecords = state.recordList.length;
+    },
+    setCandidateRecordList(state, action) {
+      state.candidaterecordList =  action.payload;
+    },
+    setDeletedLink(state, action) {
+      if (state.deleteLinkList[action.payload])
+        state.deleteLinkList[action.payload] = !state.deleteLinkList[action.payload];
+      else 
+        state.deleteLinkList[action.payload] = true;
+    },
+    setModal(state, action) {
+      state.showModal = action.payload;
+    },
+    setButtonState (state, action) {
+      state.buttonStates[action.payload._id] = action.payload.state;
+    }
   },
 });
 
-export const { findRecord, addRecord, setSearchString, addLink, deleteLink } =
-  linkRecordSlice.actions;
+export const {
+  findRecord,
+  addRecord,
+  setSearchString,
+  addLink,
+  deleteLink,
+  setRecordType,
+  setRecordList,
+  setCandidateRecordList,
+  setDeletedLink,
+  setModal,
+  setButtonState,
+} = linkRecordSlice.actions;
 
 export default linkRecordSlice.reducer;

@@ -5,11 +5,23 @@ const linkRecordController = require("../controllers/linkRecordController");
 const router = express.Router();
 
 router.get("/", linkRecordController.getLinks, (req, res) =>
-  res.status(200).json(res.locals.characters)
+  res.sendStatus(200)
 );
 
-router.get("/:record_type", linkRecordController.getRecordType, (req, res) =>
-  res.status(200).json(res.locals.record)
+router.delete('/id/:id',
+  linkRecordController.deleteByID,
+  (req,res) => res.sendStatus(200)
+);
+
+router.patch('/vote',
+  linkRecordController.updateVote,
+  (req,res) => res.sendStatus(204)
+);
+
+router.get(
+  "/record/:record_type",
+  linkRecordController.getRecordType,
+  (req, res) => res.status(200).json(res.locals.records)
 );
 
 router.post("/search", linkRecordController.getSearchResults, (req, res) =>

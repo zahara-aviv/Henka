@@ -17,6 +17,7 @@ CREATE TABLE public.record_type (
 	"_id" serial NOT NULL,
 	"state_name" varchar,
 	"company_name" varchar,
+	"country_name" varchar,
 	CONSTRAINT "record_types_pk" PRIMARY KEY ("_id")
 ) WITH (
   OIDS=FALSE
