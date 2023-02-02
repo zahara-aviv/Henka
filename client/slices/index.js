@@ -31,15 +31,6 @@ const linkRecordSlice = createSlice({
     setSearchString(state, action) {
       state.searchString = action.payload;
     },
-    addLink(state, action) {
-      const index = action.payload;
-      state.totalLinks++;
-    },
-    deleteLink(state, action) {
-      // update the recordList
-      const index = action.payload;
-      if (state.recordList[index].numberOfLinks > 0) --state.totalLinks;
-    },
     setRecordType(state, action) {
       state.recordType = action.payload;
     },
@@ -48,7 +39,7 @@ const linkRecordSlice = createSlice({
       for (const rec of action.payload) {
         state.recordList[rec.record_type_id] = rec;
       }
-      state.totalRecords = state.recordList.length;
+      state.totalRecords = Object.keys(state.recordList).length;
     },
     setCandidateRecordList(state, action) {
       state.candidateRecordList = action.payload;
@@ -114,14 +105,13 @@ const linkRecordSlice = createSlice({
       for (const rec of action.payload) {
         state.recordList[rec.record_type_id] = rec;
       }
+      state.totalRecords = Object.keys(state.recordList).length;
     },
   },
 });
 
 export const {
   setSearchString,
-  addLink,
-  deleteLink,
   clearDeletedLinks,
   setRecordType,
   setRecordList,

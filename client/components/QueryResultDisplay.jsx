@@ -106,8 +106,6 @@ const QueryResultDisplay = (props) => {
             ? link.upvote.map((up, i) => calculateHealth(up, link.downvote[i]))
             : [calculateHealth(link.upvote, link.downvote)]
         }
-        addLink={(e) => dispatch(addLink(e.target.id))}
-        deleteLink={(e) => dispatch(deleteLink(e.target.id))}
       />
     );
   }
