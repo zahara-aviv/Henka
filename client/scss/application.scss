@@ -1,3 +1,18 @@
+$primary-font-color: #222027;
+$secondary-font-color: lighten($primary-font-color, 25%); // #606f7b;
+$tertiary-font-color: lighten($primary-font-color, 40%); //#8795a1;
+$box-shadow-color: lighten($primary-font-color, 70%); //#dae1e2;
+$button-blue: #851b83;
+$char-card-width: 200px;
+// Small tablets and large smartphones (landscape view)
+$screen-sm-min: 576px;
+// Small tablets (portrait view)
+$screen-md-min: 768px;
+// Tablets and small desktops
+$screen-lg-min: 992px;
+// Large tablets and desktops
+$screen-xl-min: 1200px;
+
 * {
   box-sizing: border-box;
   font-family: "Ubuntu Light", "Century Gothic", sans-serif;
@@ -80,7 +95,7 @@ link-box {
 }
 
 .link-text {
-  text-decoration-line: none;
+  text-decoration-line: underline;
   color: purple;
   margin-right: 1em;
 }
@@ -180,4 +195,98 @@ link-box {
   color: red;
   padding-left: 1em;
   padding-right: 1em;
+}
+
+.total-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.title-heading {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 0.5em;
+  justify-content: center;
+}
+
+.BtnOptions {
+  display: flex;
+
+  flex-direction: column;
+  align-items: center;
+  // margin: 1em;
+  // font-family: "Cabin", sans-serif;
+  justify-content: center;
+
+  // flex-wrap: wrap;
+  // -webkit-font-smoothing: antialiased;
+  // text-rendering: optimizeLegibility;
+
+  .primaryButton {
+    // height: 3em;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    background-color: $button-blue;
+    color: white;
+    padding: 0.25em;
+    // border: none;
+    width: calc($char-card-width / 2);
+  }
+
+  .secondaryButton {
+    // height: 2em;
+    padding: 0.25em;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    background-color: white;
+    color: lighten($button-blue, 10%);
+    border-color: lighten($button-blue, 10%);
+    padding-left: 1em;
+    padding-right: 1em;
+    width: calc($char-card-width / 2);
+  }
+}
+
+.SearchBtnOptions {
+  display: flex;
+
+  flex-direction: row;
+  align-items: center;
+  // margin: 1em;
+  // font-family: "Cabin", sans-serif;
+  justify-content: center;
+
+  // flex-wrap: wrap;
+  // -webkit-font-smoothing: antialiased;
+  // text-rendering: optimizeLegibility;
+
+  .primaryButton {
+    // height: 3em;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    background-color: $button-blue;
+    color: white;
+    padding: 0.25em;
+    // border: none;
+    width: calc($char-card-width / 2);
+  }
+
+  .secondaryButton {
+    // height: 2em;
+    padding: 0.25em;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    background-color: white;
+    color: lighten($button-blue, 10%);
+    border-color: lighten($button-blue, 10%);
+    padding-left: 1em;
+    padding-right: 1em;
+    width: calc($char-card-width / 2);
+  }
+}
+
+.form-group {
+  margin-left: 35%;
 }

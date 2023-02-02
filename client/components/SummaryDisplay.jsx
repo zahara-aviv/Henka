@@ -18,9 +18,8 @@ const SummaryDisplay = (props) => {
   return (
     <div className="innerbox" id="totals">
       <label htmlFor="totalRecords">
-        <strong>Total Records: </strong>
+        <strong className="total-display">Total Records: {totalRecords}</strong>
       </label>
-      <span id="totalRecords">{totalRecords}</span>
     </div>
   );
 };

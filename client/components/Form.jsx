@@ -112,7 +112,7 @@ export const Form = (props) => {
   return (
     <form onSubmit={onSubmit}>
       <div className="form-group">
-        <label htmlFor="record-type">Record Type</label>
+        <label htmlFor="record-type">Record Type: </label>
         {"record_type" in currentContext && "record_name" in currentContext ? (
           <>
             <select id="recordType">
@@ -161,7 +161,7 @@ export const Form = (props) => {
         </div>
       ) : null}
       <div className="form-group">
-        <label htmlFor="url-link">url-link</label>
+        <label htmlFor="url-link">URL Link: </label>
         <input
           type="url-link"
           className="form-control"
@@ -174,7 +174,7 @@ export const Form = (props) => {
         )}
       </div>
       <div className="form-group">
-        <label htmlFor="description">description</label>
+        <label htmlFor="description">Description: </label>
         <input
           type="description"
           className="form-control"
@@ -183,9 +183,9 @@ export const Form = (props) => {
           onChange={updateDescription}
         />
       </div>
-      <div className="form-group">
+      <div className="BtnOptions">
         <button
-          className="form-control btn btn-primary"
+          className="primaryButton"
           disabled={
             recordName === "" || recordType === "" || recordURL === ""
               ? true

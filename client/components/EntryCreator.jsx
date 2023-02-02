@@ -40,13 +40,14 @@ const EntryCreator = function (props) {
     </option>,
   ];
   return (
-    <div>
-      <p>
-        <button name="create-record" onClick={handleCreateRecord}>
-          <strong>Create Link Entry</strong>
-        </button>
-      </p>
-      {/* <hr></hr> */}
+    <div className="BtnOptions">
+      <button
+        className="primaryButton"
+        name="create-record"
+        onClick={handleCreateRecord}
+      >
+        Create Link Entry
+      </button>
     </div>
     // -------------------------------
   );

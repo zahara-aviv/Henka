@@ -66,15 +66,17 @@ const QueryResultCreator = function (props) {
   );
   return (
     <div>
-      <p>
-        <strong>Search Database: </strong>
+      <p className="title-heading">
+        <strong>Search Database </strong>
       </p>
-      <label>Record Type Filter: </label>
-      <select id="recordTypeFilter" onChange={handleFilter}>
-        {options}
-      </select>
+      <div className="title-heading">
+        <label>Type Filter: </label>
+        <select id="recordTypeFilter" onChange={handleFilter}>
+          {options}
+        </select>
+      </div>
       <form>
-        <label>
+        <label className="SearchBtnOptions">
           <input
             id="search-text"
             type="text"
@@ -83,11 +85,19 @@ const QueryResultCreator = function (props) {
             onChange={handleSetSearchString}
           ></input>
         </label>
-        <div>
-          <button name="button-searchString" onClick={handleFindRecordName}>
+        <div className="SearchBtnOptions">
+          <button
+            className="primaryButton"
+            name="button-searchString"
+            onClick={handleFindRecordName}
+          >
             Search By Record Name
           </button>
-          <button name="button-searchString" onClick={handleFindURL}>
+          <button
+            className="primaryButton"
+            name="button-searchString"
+            onClick={handleFindURL}
+          >
             Search By URL / Description
           </button>
         </div>

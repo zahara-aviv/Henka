@@ -44,7 +44,7 @@ const QueryResult = (props) => {
   // keep track of button clicks
 
   const handleDeleteLink = async () => {
-    console.log(deleteLinkList);
+    // console.log(deleteLinkList);
     for (const id in deleteLinkList) {
       if (deleteLinkList[id] === true) {
         await fetch("/api/id/" + id, { method: "DELETE" }).catch((err) => {
@@ -267,12 +267,26 @@ const QueryResult = (props) => {
         <strong>Links: </strong>
         {links}
       </p>
-      <button key={1} id={props.id} onClick={handleAddLink}>
-        Add Link
-      </button>
-      <button key={2} id={props.id} onClick={handleDeleteLink}>
-        Delete Link
-      </button>
+      <div className="BtnOptions">
+        <button
+          className="primaryButton"
+          key={1}
+          id={props.id}
+          onClick={handleAddLink}
+        >
+          Add Link
+        </button>
+      </div>
+      <div className="BtnOptions">
+        <button
+          className="secondaryButton"
+          key={2}
+          id={props.id}
+          onClick={handleDeleteLink}
+        >
+          Delete Link
+        </button>
+      </div>
     </div>
   );
 };
