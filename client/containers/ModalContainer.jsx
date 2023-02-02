@@ -12,7 +12,7 @@ export class ModalContainer extends Component {
   };
   closeModal = () => {
     this.props.setModal(false);
-    this.triggerRef.focus();
+    // this.triggerRef.focus();
     this.toggleScrollLock();
   };
   onKeyDown = (event) => {

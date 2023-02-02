@@ -9,7 +9,7 @@ router.delete("/id/:id", linkRecordController.deleteByID, (req, res) =>
 );
 
 router.patch("/vote", linkRecordController.updateVote, (req, res) =>
-  res.sendStatus(204)
+  res.status(200).json(res.locals.record)
 );
 
 router.get(
@@ -24,13 +24,13 @@ router.post(
   (req, res) => res.status(200).json(res.locals.searchResults)
 );
 
-// /?id=1234
-router.get("/id", linkRecordController.getByID, (req, res) =>
+// /id/1234
+router.get("/id/:id", linkRecordController.getByID, (req, res) =>
   res.status(200).json(res.locals.record)
 );
 
 router.post("/record", linkRecordController.addLinkRecord, (req, res) => {
-  res.sendStatus(204);
+  res.status(200).json(res.locals.record);
 });
 
 module.exports = router;

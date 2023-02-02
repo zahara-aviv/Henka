@@ -16,7 +16,7 @@ import {
   setModal,
   setCandidateRecordType,
   setCandidateRecordName,
-  setDisplaySelector,
+  setFormDisplaySelector,
 } from "../slices";
 
 const EntryCreator = function (props) {
@@ -27,7 +27,7 @@ const EntryCreator = function (props) {
     dispatch(setCurrentContext({}));
     dispatch(setCandidateRecordType(""));
     dispatch(setCandidateRecordName(""));
-    dispatch(setDisplaySelector("None"));
+    dispatch(setFormDisplaySelector("None"));
     dispatch(setModal(true));
   };
 

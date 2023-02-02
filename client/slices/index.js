@@ -5,14 +5,16 @@ import { STATE_NAMES } from "../enums";
 const initialState = {
   //convert to an immutable type
   totalRecords: 0,
-  recordType: RECORD_TYPES["*"],
+  recordType: "",
   showModal: false,
-  displaySelector: RECORD_TYPES["state_name"],
+  displaySelector: "",
+  formDisplaySelector: "",
   totalLinks: 0,
-  recordList: [],
+  recordList: {},
   deleteLinkList: {},
+  updateLinkList: {},
   candidateRecordName: "",
-  candidateRecordType: RECORD_TYPES["state_name"],
+  candidateRecordType: "",
   candidateRecordURL: "",
   candidateDescription: "",
   candidateRecordList: [],
@@ -29,16 +31,6 @@ const linkRecordSlice = createSlice({
     setSearchString(state, action) {
       state.searchString = action.payload;
     },
-    addRecord(state, action) {
-      state.totalRecords++;
-      state.lastRecordId++;
-      state.recordList.push({
-        recordID: state.lastRecordId,
-        searchString: state.searchString,
-        numberOfLinks: 0, // assume 0
-      });
-      state.searchString = "";
-    },
     addLink(state, action) {
       const index = action.payload;
       state.totalLinks++;
@@ -47,31 +39,49 @@ const linkRecordSlice = createSlice({
       // update the recordList
       const index = action.payload;
       if (state.recordList[index].numberOfLinks > 0) --state.totalLinks;
-
-      // state.recordList = state.recordList.map((elem, i) => {
-      //   if (index === i && elem.numberOfLinks > 0) --elem.numberOfLinks;
-      //   if (state.totalLinks > 0)
-      //     elem.percentageOfTotal = (
-      //       Math.round(10000 * (elem.numberOfLinks / state.totalLinks)) / 100
-      //     ).toFixed(2);
-      //   return elem;
-      // });
     },
     setRecordType(state, action) {
       state.recordType = action.payload;
     },
     setRecordList(state, action) {
-      state.recordList = action.payload;
+      state.recordList = {};
+      for (const rec of action.payload) {
+        state.recordList[rec.record_type_id] = rec;
+      }
       state.totalRecords = state.recordList.length;
     },
     setCandidateRecordList(state, action) {
-      state.candidaterecordList = action.payload;
+      state.candidateRecordList = action.payload;
     },
     setDeletedLink(state, action) {
-      if (state.deleteLinkList[action.payload])
-        state.deleteLinkList[action.payload] =
-          !state.deleteLinkList[action.payload];
-      else state.deleteLinkList[action.payload] = true;
+      if (state.deleteLinkList[action.payload._id])
+        state.deleteLinkList[action.payload._id] =
+          !state.deleteLinkList[action.payload._id];
+      else state.deleteLinkList[action.payload._id] = true;
+
+      if (state.deleteLinkList[action.payload._id]) {
+        if (
+          state.updateLinkList &&
+          state.updateLinkList[action.payload.record_type_id]
+        )
+          state.updateLinkList[action.payload.record_type_id] = {
+            ...state.updateLinkList[action.payload.record_type_id],
+            [action.payload._id]: true,
+          };
+        else
+          state.updateLinkList[action.payload.record_type_id] = {
+            [action.payload._id]: true,
+          };
+      } else {
+        state.updateLinkList[action.payload.record_type_id] = {
+          ...state.updateLinkList[action.payload.record_type_id],
+          [action.payload._id]: false,
+        };
+      }
+    },
+    clearDeletedLinks(state, action) {
+      state.deleteLink = {};
+      state.updateLinkList = {};
     },
     setModal(state, action) {
       state.showModal = action.payload;
@@ -85,6 +95,9 @@ const linkRecordSlice = createSlice({
     setDisplaySelector(state, action) {
       state.displaySelector = action.payload;
     },
+    setFormDisplaySelector(state, action) {
+      state.formDisplaySelector = action.payload;
+    },
     setCandidateRecordName(state, action) {
       state.candidateRecordName = action.payload;
     },
@@ -97,14 +110,19 @@ const linkRecordSlice = createSlice({
     setCandidateRecordDescription(state, action) {
       state.candidateDescription = action.payload;
     },
+    updateRecordList(state, action) {
+      for (const rec of action.payload) {
+        state.recordList[rec.record_type_id] = rec;
+      }
+    },
   },
 });
 
 export const {
-  addRecord,
   setSearchString,
   addLink,
   deleteLink,
+  clearDeletedLinks,
   setRecordType,
   setRecordList,
   setCandidateRecordName,
@@ -114,9 +132,11 @@ export const {
   setModal,
   setButtonState,
   setDisplaySelector,
+  setFormDisplaySelector,
   setCurrentContext,
   setCandidateRecordURL,
   setCandidateRecordDescription,
+  updateRecordList,
 } = linkRecordSlice.actions;
 
 export default linkRecordSlice.reducer;

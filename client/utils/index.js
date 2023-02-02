@@ -6,7 +6,9 @@ export function getKeyByValue(object, value) {
 
 export default async function getRecords(key) {
   const results = [];
-  const url = "/api/record/" + getKeyByValue(RECORD_TYPES, key);
+  const type = getKeyByValue(RECORD_TYPES, key);
+  if (!type) return results;
+  const url = "/api/record/" + type;
   await fetch(url)
     .then((res) => res.json())
     .then((data) => {
@@ -29,6 +31,8 @@ export async function searchRecords(type, searchString) {
   })
     .then((res) => res.json())
     .then((data) => {
+      console.log(data);
+      if ("err" in data) return; // error from server.
       for (const obj of data) {
         results.push(obj);
       }

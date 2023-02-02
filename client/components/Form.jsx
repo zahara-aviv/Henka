@@ -1,12 +1,13 @@
 import React from "react";
+import isUrl from "is-url";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setCandidateRecordType,
-  setDisplaySelector,
+  setFormDisplaySelector,
   setCandidateRecordName,
   setCandidateRecordURL,
   setCandidateRecordDescription,
-  setRecordList,
+  updateRecordList,
   setModal,
 } from "../slices";
 import { VALID_RECORD_TYPES, STATE_NAMES, COUNTRY_NAMES } from "../enums";
@@ -21,18 +22,22 @@ export const Form = (props) => {
     (state) => state.links.candidateDescription
   );
   const recordURL = useSelector((state) => state.links.candidateRecordURL);
-  const displaySelector = useSelector((state) => state.links.displaySelector);
+  const formDisplaySelector = useSelector(
+    (state) => state.links.formDisplaySelector
+  );
   const currentContext = useSelector((state) => state.links.currentContext);
 
   const candidateRecordName = useSelector(
     (state) => state.links.candidateRecordName
   );
-  const recordTypeOptions = Object.values(VALID_RECORD_TYPES).map(
-    (elem, idx) => (
+  const recordTypeOptions = [
+    <option id="default" value="" key="default"></option>,
+  ].concat(
+    Object.values(VALID_RECORD_TYPES).map((elem, idx) => (
       <option id={elem} value={elem} key={idx}>
         {elem}
       </option>
-    )
+    ))
   );
   const stateNameOptions = [
     <option id="default" value="" key="default"></option>,
@@ -58,7 +63,7 @@ export const Form = (props) => {
   const handleRecTypeSelect = (e) => {
     dispatch(setCandidateRecordType(e.target.value));
     dispatch(setCandidateRecordName(""));
-    dispatch(setDisplaySelector(e.target.value));
+    dispatch(setFormDisplaySelector(e.target.value));
   };
   const handleStateSelect = (e) => {
     dispatch(setCandidateRecordName(e.target.value));
@@ -87,15 +92,21 @@ export const Form = (props) => {
     if ("record_type_id" in currentContext) {
       body["record_type_id"] = currentContext.record_type_id;
     }
-    // console.log(body);
+
     await fetch("/api/record", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
-    }).catch((err) => console.log(err));
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        // console.log(data);
+        dispatch(updateRecordList(data));
+      })
+      .catch((err) => console.log(err));
     // update records
-    const results = await getRecords(recordType);
-    dispatch(setRecordList(results));
+    // const results = await getRecords(recordType);
+    // dispatch(setRecordList(results));
     dispatch(setModal(false));
   };
   return (
@@ -120,17 +131,23 @@ export const Form = (props) => {
             {recordTypeOptions}
           </select>
         )}
-        {displaySelector === VALID_RECORD_TYPES["state_name"] ? (
+        {formDisplaySelector === VALID_RECORD_TYPES["state_name"] ? (
           <select id="stateNameSelect" onChange={handleStateSelect}>
             {stateNameOptions}
           </select>
-        ) : displaySelector === VALID_RECORD_TYPES["country_name"] ? (
+        ) : formDisplaySelector === VALID_RECORD_TYPES["country_name"] ? (
           <select id="countryNameSelect" onChange={handleCountrySelect}>
             {countryNameOptions}
           </select>
         ) : null}
+        {recordType === "" ? (
+          <strong className="warning-text">(Select a Record Type)</strong>
+        ) : recordName === "" &&
+          formDisplaySelector !== VALID_RECORD_TYPES["company_name"] ? (
+          <strong className="warning-text">(Select a Record Name)</strong>
+        ) : null}
       </div>
-      {displaySelector === VALID_RECORD_TYPES["company_name"] ? (
+      {formDisplaySelector === VALID_RECORD_TYPES["company_name"] ? (
         <div className="form-group">
           <label htmlFor="name">Company Name</label>
           <input
@@ -138,6 +155,9 @@ export const Form = (props) => {
             id="name"
             onChange={updateRecordName}
           />
+          {recordName !== "" ? null : (
+            <strong className="warning-text">(Enter a Company Name)</strong>
+          )}
         </div>
       ) : null}
       <div className="form-group">
@@ -149,6 +169,9 @@ export const Form = (props) => {
           placeholder="https://"
           onChange={updateURL}
         />
+        {isUrl(recordURL) ? null : (
+          <strong className="warning-text">(Enter a valid URL)</strong>
+        )}
       </div>
       <div className="form-group">
         <label htmlFor="description">description</label>
@@ -161,7 +184,15 @@ export const Form = (props) => {
         />
       </div>
       <div className="form-group">
-        <button className="form-control btn btn-primary" type="submit">
+        <button
+          className="form-control btn btn-primary"
+          disabled={
+            recordName === "" || recordType === "" || recordURL === ""
+              ? true
+              : false
+          }
+          type="submit"
+        >
           Submit
         </button>
       </div>

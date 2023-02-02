@@ -65,6 +65,7 @@ link object:
 */
 const QueryResultDisplay = (props) => {
   const recordList = useSelector((state) => state.links.recordList);
+  const displaySelector = useSelector((state) => state.links.displaySelector);
   const dispatch = useDispatch();
   const links = [];
   const calculateHealth = (up, down) => {
@@ -72,7 +73,8 @@ const QueryResultDisplay = (props) => {
     if (isNaN(result)) return 0;
     return result;
   };
-  recordList.forEach((link) => {
+  for (const key in recordList) {
+    const link = recordList[key];
     links.push(
       <QueryResult
         key={link._id}
@@ -87,8 +89,6 @@ const QueryResultDisplay = (props) => {
             ? link.state_name[0]
             : link.country_name[0]
         }
-        linkList={Array.isArray(link.url) ? link.url : [link.url]}
-        description={link.description}
         recordType={
           link.state_name[0] !== null
             ? RECORD_TYPES.state_name
@@ -96,7 +96,9 @@ const QueryResultDisplay = (props) => {
             ? RECORD_TYPES.country_name
             : RECORD_TYPES.company_name
         }
-        recordTypeID={Number(link.record_type_id)}
+        linkList={link.url}
+        description={link.description}
+        recordTypeID={link.record_type_id}
         upVotes={link.upvote}
         downVotes={link.downvote}
         health={
@@ -108,7 +110,7 @@ const QueryResultDisplay = (props) => {
         deleteLink={(e) => dispatch(deleteLink(e.target.id))}
       />
     );
-  });
+  }
 
   /*
   recordID: lastrecordID, // Record ID: unique number
@@ -118,7 +120,7 @@ const QueryResultDisplay = (props) => {
   return (
     <div className="displayBox">
       <h4>Links</h4>
-      {links}
+      {displaySelector === "" ? null : links}
     </div>
   );
 };

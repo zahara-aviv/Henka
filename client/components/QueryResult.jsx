@@ -22,7 +22,10 @@ import {
   setCurrentContext,
   setCandidateRecordType,
   setCandidateRecordName,
-  setDisplaySelector,
+  setCandidateRecordURL,
+  setFormDisplaySelector,
+  updateRecordList,
+  clearDeletedLinks,
 } from "../slices";
 import getRecords from "../utils";
 
@@ -35,6 +38,7 @@ const QueryResult = (props) => {
   };
   const dispatch = useDispatch();
   const deleteLinkList = useSelector((state) => state.links.deleteLinkList);
+  const updateLinkList = useSelector((state) => state.links.updateLinkList);
   const recordType = useSelector((state) => state.links.recordType);
   const buttonStates = useSelector((state) => state.links.buttonStates);
   // keep track of button clicks
@@ -43,15 +47,32 @@ const QueryResult = (props) => {
     console.log(deleteLinkList);
     for (const id in deleteLinkList) {
       if (deleteLinkList[id] === true) {
-        try {
-          await fetch("/api/id/" + id, { method: "DELETE" });
-        } catch (err) {
+        await fetch("/api/id/" + id, { method: "DELETE" }).catch((err) => {
           console.log(err);
-        }
+        });
       }
     }
-    const results = await getRecords(recordType);
-    dispatch(setRecordList(results));
+    for (const id in updateLinkList) {
+      let update = false;
+      for (const key in updateLinkList[id]) {
+        update = update || updateLinkList[id][key];
+        if (update) break;
+      }
+      if (update) {
+        await fetch("/api/id/" + id, { method: "GET" })
+          .then((res) => res.json())
+          .then((data) => {
+            // console.log(data);
+            dispatch(updateRecordList(data));
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    }
+    dispatch(clearDeletedLinks());
+    // const results = await getRecords(recordType);
+    // dispatch(setRecordList(results));
   };
 
   const handleAddLink = () => {
@@ -64,7 +85,8 @@ const QueryResult = (props) => {
     );
     dispatch(setCandidateRecordType(props.recordType));
     dispatch(setCandidateRecordName(props.recordName));
-    dispatch(setDisplaySelector("None"));
+    dispatch(setCandidateRecordURL(""));
+    dispatch(setFormDisplaySelector("None"));
     dispatch(setModal(true));
   };
 
@@ -83,9 +105,13 @@ const QueryResult = (props) => {
         upvote,
         downvote,
       }),
-    }).catch((err) => console.log(err));
-    const results = await getRecords(recordType);
-    dispatch(setRecordList(results));
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        // console.log(data);
+        dispatch(updateRecordList(data));
+      })
+      .catch((err) => console.log(err));
   };
 
   const updateDownVote = async (increase, idx) => {
@@ -103,9 +129,13 @@ const QueryResult = (props) => {
         upvote,
         downvote,
       }),
-    }).catch((err) => console.log(err));
-    const results = await getRecords(recordType);
-    dispatch(setRecordList(results));
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        // console.log(data);
+        dispatch(updateRecordList(data));
+      })
+      .catch((err) => console.log(err));
   };
 
   const setUpVote = async (e, idx) => {
@@ -133,7 +163,7 @@ const QueryResult = (props) => {
       update = true;
     }
     if (update) {
-      e.currentTarget.classList.toggle("on");
+      // e.currentTarget.classList.toggle("on");
       //update the database...
       await updateUpVote(up, idx);
     }
@@ -164,24 +194,24 @@ const QueryResult = (props) => {
       update = true;
     }
     if (update) {
-      e.currentTarget.classList.toggle("on");
+      // e.currentTarget.classList.toggle("on");
       //update the database...
       await updateDownVote(down, idx);
     }
   };
 
-  // props._ID.forEach((_id) => {
-  //   dispatch(setButtonState({_id, state: {up: false, down: false}}));
-  // })
-
   const links = props.linkList.map((elem, idx) => {
     const _id = props._ID[idx];
     return (
-      <link-box>
+      <link-box key={elem + idx}>
         <input
           type="checkbox"
           id="delete"
-          onClick={() => dispatch(setDeletedLink(_id))}
+          onClick={() =>
+            dispatch(
+              setDeletedLink({ _id, record_type_id: props.recordTypeID })
+            )
+          }
           name={"delete" + idx}
           value=""
           key={"radio" + idx}
@@ -205,10 +235,22 @@ const QueryResult = (props) => {
           />
         </svg>
         <>{props.health[idx] + "%"}</>
-        <span className="up-vote" onClick={(e) => setUpVote(e, idx)}>
+        <span
+          className={
+            buttonStates[_id] && buttonStates[_id].up ? "up-vote on" : "up-vote"
+          }
+          onClick={(e) => setUpVote(e, idx)}
+        >
           <FAIcon icon={faUpVote} fill="currentColor" />
         </span>
-        <span className="down-vote" onClick={(e) => setDownVote(e, idx)}>
+        <span
+          className={
+            buttonStates[_id] && buttonStates[_id].down
+              ? "down-vote on"
+              : "down-vote"
+          }
+          onClick={(e) => setDownVote(e, idx)}
+        >
           <FAIcon icon={faDownVote} fill="currentColor" />
         </span>
       </link-box>
@@ -217,10 +259,6 @@ const QueryResult = (props) => {
 
   return (
     <div className="LinkRecordBox">
-      {/* <p>
-        <strong>ID(s): </strong>
-        {props.id.join(", ")}
-      </p> */}
       <p>
         <strong>{props.recordType}: </strong>
         {props.recordName}

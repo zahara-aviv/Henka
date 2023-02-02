@@ -16,6 +16,8 @@ import {
   setRecordType,
   setSearchString,
   setRecordList,
+  setDisplaySelector,
+  setFormDisplaySelector,
 } from "../slices";
 import RECORD_TYPES from "../enums";
 import getRecords from "../utils";
@@ -29,6 +31,8 @@ const QueryResultCreator = function (props) {
     dispatch(setRecordType(e.target.value));
     const results = await getRecords(e.target.value);
     dispatch(setRecordList(results));
+    dispatch(setDisplaySelector(e.target.value));
+    dispatch(setFormDisplaySelector(e.target.value));
   };
 
   const handleFindRecordName = async (e) => {
@@ -36,6 +40,7 @@ const QueryResultCreator = function (props) {
     // call database for string e.target.value
     const results = await searchRecords("record_type", searchString);
     dispatch(setRecordList(results));
+    dispatch(setDisplaySelector("Search"));
   };
 
   const handleFindURL = async (e) => {
@@ -43,17 +48,22 @@ const QueryResultCreator = function (props) {
     // call database for string e.target.value
     const results = await searchRecords("uri", searchString);
     dispatch(setRecordList(results));
+    dispatch(setDisplaySelector("Search"));
   };
 
   const handleSetSearchString = (e) => {
     dispatch(setSearchString(e.target.value));
   };
 
-  const options = Object.values(RECORD_TYPES).map((elem, idx) => (
-    <option id={elem + idx} value={elem} key={idx}>
-      {elem}
-    </option>
-  ));
+  const options = [
+    <option id="default" value="" key="default"></option>,
+  ].concat(
+    Object.values(RECORD_TYPES).map((elem, idx) => (
+      <option id={elem + idx} value={elem} key={idx}>
+        {elem}
+      </option>
+    ))
+  );
   return (
     <div>
       <p>

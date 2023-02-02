@@ -21,11 +21,11 @@ import ModalContainer from "./ModalContainer.jsx";
 
 function MainContainer(props) {
   const triggerText = "Open form";
-  const onSubmit = (event) => {
-    event.preventDefault(event);
-    console.log(event.target.name.value);
-    console.log(event.target.url - link.value);
-  };
+  // const onSubmit = (event) => {
+  //   event.preventDefault(event);
+  //   // console.log(event.target.name.value);
+  //   // console.log(event.target.url - link.value);
+  // };
   const isShown = useSelector((state) => state.links.showModal);
   const dispatch = useDispatch();
   const setModalState = (e) => dispatch(setModal(e));
@@ -39,7 +39,6 @@ function MainContainer(props) {
         <ModalContainer
           isShown={isShown}
           triggerText={triggerText}
-          onSubmit={onSubmit}
           setModal={setModalState}
         />
       </div>

@@ -46,7 +46,7 @@ const linkRecordController = {
             db.query(rmConfidence),
           ])
             .then((results) => {
-              console.log(results);
+              // console.log(results);
               return next();
             })
             .catch((err) =>
@@ -157,7 +157,7 @@ const linkRecordController = {
       });
     }
   },
-  updateVote: (req, res, next) => {
+  updateVote: async (req, res, next) => {
     console.log("in updateVote");
     const keys = ["_id", "upvote", "downvote"];
     for (const key of keys) {
@@ -172,15 +172,59 @@ const linkRecordController = {
     const text = `UPDATE confidence   
       SET upvote = $2, downvote = $3 
       WHERE _id = $1`;
-    console.log(
-      `id = ${req.body._id}, upvote = ${req.body.upvote}, downvote = ${req.body.downvote}`
-    );
-    db.query(text, [req.body._id, req.body.upvote, req.body.downvote])
+    // console.log(
+    //   `id = ${req.body._id}, upvote = ${req.body.upvote}, downvote = ${req.body.downvote}`
+    // );
+    await db
+      .query(text, [req.body._id, req.body.upvote, req.body.downvote])
+      .then((result) => {})
+      .catch((err) =>
+        next({ log: "Error caught in updateVote", message: { err } })
+      );
+
+    const getRecord = `SELECT l.record_type_id  
+      FROM link_record l
+      JOIN uri u ON l.uri_id = u._id 
+      JOIN record_type r ON l.record_type_id = r._id
+      JOIN confidence c ON l.confidence_id = c._id
+      WHERE l.confidence_id = $1
+      GROUP BY l.record_type_id`;
+    const getAllRecords = `SELECT l.record_type_id,
+    array_agg(l.confidence_id) as confidence_id,
+    array_agg(l._id) as _id, 
+    array_agg(l.uri_id) as uri_id, 
+    array_agg(u.url) AS url, 
+    array_agg(u.description) As description, 
+    array_agg(r.company_name) as company_name, 
+    array_agg(r.country_name) as country_name, 
+    array_agg(r.state_name) as state_name, 
+    array_agg(c.upvote) as upvote, 
+    array_agg(c.downvote) as downvote  
+    FROM link_record l
+    JOIN uri u ON l.uri_id = u._id 
+    JOIN record_type r ON l.record_type_id = r._id
+    JOIN confidence c ON l.confidence_id = c._id
+    WHERE l.record_type_id IN ($1)
+    GROUP BY l.record_type_id`;
+    let record_type_ids;
+    // get record_type_id
+    await db
+      .query(getRecord, [req.body._id])
       .then((result) => {
+        record_type_ids = result.rows[0].record_type_id;
+      })
+      .catch((err) =>
+        next({ log: "Error caught in updateVote 1", message: { err } })
+      );
+    // get all records with record_type_id
+    await db
+      .query(getAllRecords, [record_type_ids])
+      .then((result) => {
+        res.locals.record = result.rows;
         return next();
       })
       .catch((err) =>
-        next({ log: "Error caught in updateVote", message: { err } })
+        next({ log: "Error caught in updateVote 2", message: { err } })
       );
   },
   /*
@@ -281,15 +325,28 @@ const linkRecordController = {
   /*
    */
   getByID: (req, res, next) => {
-    console.log("get ByID...", req.params);
-    if ("id" in req.query) {
-      const id = req.query.id;
-      const values = [id];
-      const text = "SELECT * FROM link_record WHERE _id = $1";
-      db.query(text, values)
+    if ("id" in req.params) {
+      //select all records with ids found above...
+      const getAllRecords = `SELECT l.record_type_id,
+              array_agg(l._id) as _id,
+              array_agg(l.confidence_id) as confidence_id,
+              array_agg(l.uri_id) as uri_id,
+              array_agg(u.url) AS url,
+              array_agg(u.description) As description,
+              array_agg(r.company_name) as company_name,
+              array_agg(r.country_name) as country_name,
+              array_agg(r.state_name) as state_name,
+              array_agg(c.upvote) as upvote,
+              array_agg(c.downvote) as downvote
+              FROM link_record l
+              JOIN uri u ON l.uri_id = u._id
+              JOIN record_type r ON l.record_type_id = r._id
+              JOIN confidence c ON l.confidence_id = c._id 
+              WHERE l.record_type_id IN ($1) 
+               GROUP BY l.record_type_id;`;
+      // get the results from the DB
+      db.query(getAllRecords, [req.params.id])
         .then((result) => {
-          // console.log(result);
-          // if result is empty throw an error...
           if (!("rows" in result) || result.rows.length === 0) {
             return next({
               log: "Error caught in getByID, query empty",
@@ -298,11 +355,12 @@ const linkRecordController = {
               },
             });
           }
-          res.locals.record = result.rows[0];
-          next();
+          console.log(result.rows);
+          res.locals.record = result.rows;
+          return next();
         })
         .catch((err) => {
-          next({
+          return next({
             log: "Error caught in getByID",
             message: { err },
           });
@@ -329,7 +387,7 @@ const linkRecordController = {
   output: Create entry in database:
   */
   addLinkRecord: async (req, res, next) => {
-    console.log("get addLink...", req.body);
+    // console.log("get addLink...", req.body);
     const keys = ["record_type", "record_name", "url", "description"];
     for (const key of keys) {
       if (!([key] in req.body)) {
@@ -369,9 +427,29 @@ const linkRecordController = {
             },
           });
       }
-      const insertRecordType = `INSERT INTO record_type (${req.body.record_type})
-                  VALUES ($1) RETURNING *`;
-      promiseArray.push(db.query(insertRecordType, [req.body.record_name]));
+      const getIDbyRecordName = `SELECT _id from record_type 
+            WHERE ${req.body.record_type} = $1`;
+
+      // find if name in record_type table and if it is use it.
+      await db
+        .query(getIDbyRecordName, [req.body.record_name])
+        .then((result) => {
+          if (result.rows && result.rows.length !== 0) {
+            record_type_id = result.rows[0]._id; // record found
+          }
+        })
+        .catch((error) => {
+          next({
+            log: "Error caught in addLinkRecord",
+            message: { err: error },
+          });
+        });
+      // no matching record, create one...
+      if (!record_type_id) {
+        const insertRecordType = `INSERT INTO record_type (${req.body.record_type})
+                    VALUES ($1) RETURNING *`;
+        promiseArray.push(db.query(insertRecordType, [req.body.record_name]));
+      }
     }
 
     await Promise.all(promiseArray)
@@ -397,16 +475,51 @@ const linkRecordController = {
 
     const insertLinkRecord = `INSERT INTO link_record (record_type_id, confidence_id, uri_id)
                   VALUES ($1, $2, $3);`;
-    console.log([record_type_id, confidence_id, uri_id]);
-    db.query(insertLinkRecord, [record_type_id, confidence_id, uri_id])
-      .then((result) => {
-        return next();
-      })
+    // console.log([record_type_id, confidence_id, uri_id]);
+    await db
+      .query(insertLinkRecord, [record_type_id, confidence_id, uri_id])
+      .then((result) => {})
       .catch((error) => {
         next({
           log: "Error caught in addLinkRecord",
           message: { err: error },
         });
+      });
+    //select all records with ids found above...
+    const getAllRecords = `SELECT l.record_type_id,
+              array_agg(l._id) as _id,
+              array_agg(l.confidence_id) as confidence_id,
+              array_agg(l.uri_id) as uri_id,
+              array_agg(u.url) AS url,
+              array_agg(u.description) As description,
+              array_agg(r.company_name) as company_name,
+              array_agg(r.country_name) as country_name,
+              array_agg(r.state_name) as state_name,
+              array_agg(c.upvote) as upvote,
+              array_agg(c.downvote) as downvote
+              FROM link_record l
+              JOIN uri u ON l.uri_id = u._id
+              JOIN record_type r ON l.record_type_id = r._id
+              JOIN confidence c ON l.confidence_id = c._id 
+              WHERE l.record_type_id IN (${record_type_id}) 
+               GROUP BY l.record_type_id;`;
+    // get the results from the DB
+    db.query(getAllRecords)
+      .then((result) => {
+        if (!("rows" in result) || result.rows.length === 0) {
+          return next({
+            log: "Error caught in getRecordType, query empty",
+            message: {
+              err: "An error occurred in linkRecordController.getRecordType",
+            },
+          });
+        }
+        console.log(result.rows);
+        res.locals.record = result.rows;
+        return next();
+      })
+      .catch((err) => {
+        return next({ log: "Error caught in getRecordType", message: { err } });
       });
   },
 };
