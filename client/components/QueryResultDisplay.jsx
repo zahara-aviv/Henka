@@ -117,7 +117,7 @@ const QueryResultDisplay = (props) => {
   */
   return (
     <div className="displayBox">
-      <h4>Links</h4>
+      <h4 className="title-heading">Links</h4>
       {displaySelector === "" ? null : links}
     </div>
   );
