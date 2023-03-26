@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { Form } from "./Form.jsx";
+import { Form } from "./Form.js";
 import FocusTrap from "focus-trap-react";
 export const Modal = ({
   onClickOutside,
@@ -12,9 +12,9 @@ export const Modal = ({
   return ReactDOM.createPortal(
     <FocusTrap>
       <aside
-        tag="aside"
+        // tag="aside"
         role="dialog"
-        tabIndex="-1"
+        tabIndex={-1}
         aria-modal="true"
         className="modal-cover"
         onClick={onClickOutside}

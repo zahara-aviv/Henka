@@ -11,9 +11,12 @@
 
 import React from "react";
 import { useSelector } from "react-redux";
+import type { LinkStore } from "../slices";
 
 const SummaryDisplay = (props) => {
-  const totalRecords = useSelector((state) => state.links.totalRecords);
+  const totalRecords = useSelector(
+    (state: LinkStore) => state.links.totalRecords
+  );
 
   return (
     <div className="innerbox" id="totals">

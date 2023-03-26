@@ -18,10 +18,13 @@ import {
   setCandidateRecordName,
   setFormDisplaySelector,
 } from "../slices";
+import type { LinkStore } from "../slices";
 
 const EntryCreator = function (props) {
   const dispatch = useDispatch();
-  const searchString = useSelector((state) => state.links.searchString);
+  const searchString = useSelector(
+    (state: LinkStore) => state.links.searchString
+  );
 
   const handleCreateRecord = (e) => {
     dispatch(setCurrentContext({}));

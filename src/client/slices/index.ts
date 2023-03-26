@@ -2,7 +2,60 @@ import { createSlice } from "@reduxjs/toolkit";
 import RECORD_TYPES from "../enums";
 import { STATE_NAMES } from "../enums";
 
-const initialState = {
+export type LinkState = {
+  totalRecords: number;
+  recordType: string;
+  showModal: boolean;
+  displaySelector: string;
+  formDisplaySelector: string;
+  totalLinks: number;
+  recordList: RecordList;
+  deleteLinkList: LinkList;
+  updateLinkList: LinkList;
+  candidateRecordName: string;
+  candidateRecordType: string;
+  candidateRecordURL: string;
+  candidateDescription: string;
+  // candidateRecordList: [];
+  currentContext: CurrentContext | {};
+  lastRecordId: number;
+  searchString: string;
+  buttonStates: ButtonState | {};
+};
+
+export type CurrentContext = {
+  record_type: string;
+  record_name: string;
+  record_type_id: number;
+};
+
+export type LinkList = {
+  [x: number]: boolean;
+};
+
+export type ButtonState = {
+  [x: number]: { state: { up: boolean; down: boolean } };
+};
+
+export type RecordList = {
+  [x: number]: LinkRecord;
+};
+
+export type LinkRecord = {
+  _id: number;
+  record_type_id: number;
+  confidence_id: number;
+  uri_id: number;
+  url: string;
+  description: string;
+  company_name: string;
+  country_name: string;
+  state_name: string;
+  upvote: number;
+  downvote: number;
+};
+
+const initialState: LinkState = {
   //convert to an immutable type
   totalRecords: 0,
   recordType: "",
@@ -17,11 +70,15 @@ const initialState = {
   candidateRecordType: "",
   candidateRecordURL: "",
   candidateDescription: "",
-  candidateRecordList: [],
+  // candidateRecordList: [],
   currentContext: {},
   lastRecordId: 0,
   searchString: "",
   buttonStates: {},
+};
+
+export type LinkStore = {
+  links: LinkState;
 };
 
 const linkRecordSlice = createSlice({
@@ -41,44 +98,50 @@ const linkRecordSlice = createSlice({
       }
       state.totalRecords = Object.keys(state.recordList).length;
     },
-    setCandidateRecordList(state, action) {
-      state.candidateRecordList = action.payload;
-    },
+    // setCandidateRecordList(state, action) {
+    //   state.candidateRecordList = action.payload;
+    // },
     setDeletedLink(state, action) {
       if (state.deleteLinkList[action.payload._id])
         state.deleteLinkList[action.payload._id] =
           !state.deleteLinkList[action.payload._id];
       else state.deleteLinkList[action.payload._id] = true;
 
-      if (state.deleteLinkList[action.payload._id]) {
-        if (
-          state.updateLinkList &&
-          state.updateLinkList[action.payload.record_type_id]
-        )
-          state.updateLinkList[action.payload.record_type_id] = {
-            ...state.updateLinkList[action.payload.record_type_id],
-            [action.payload._id]: true,
-          };
-        else
-          state.updateLinkList[action.payload.record_type_id] = {
-            [action.payload._id]: true,
-          };
+      if (state.deleteLinkList[action.payload._id] !== undefined) {
+        state.updateLinkList = Object.assign({}, state.updateLinkList, {
+          [action.payload._id]: true,
+        });
       } else {
-        state.updateLinkList[action.payload.record_type_id] = {
-          ...state.updateLinkList[action.payload.record_type_id],
+        state.updateLinkList = Object.assign({}, state.updateLinkList, {
           [action.payload._id]: false,
-        };
+        });
       }
     },
     clearDeletedLinks(state, action) {
-      state.deleteLink = {};
+      state.deleteLinkList = {};
       state.updateLinkList = {};
     },
     setModal(state, action) {
       state.showModal = action.payload;
     },
     setButtonState(state, action) {
-      state.buttonStates[action.payload._id] = action.payload.state;
+      const { _id } = action.payload;
+      if (
+        _id !== undefined &&
+        typeof _id === "number" &&
+        "state" in action.payload
+      ) {
+        const { up, down } = action.payload.state;
+        if (
+          up !== undefined &&
+          down !== undefined &&
+          typeof up === "boolean" &&
+          typeof down === "boolean"
+        )
+          state.buttonStates = Object.assign({}, state.buttonStates, {
+            [_id]: { state: { up, down } },
+          });
+      }
     },
     setCandidateRecordType(state, action) {
       state.candidateRecordType = action.payload;
@@ -116,7 +179,7 @@ export const {
   setRecordType,
   setRecordList,
   setCandidateRecordName,
-  setCandidateRecordList,
+  // setCandidateRecordList,
   setCandidateRecordType,
   setDeletedLink,
   setModal,

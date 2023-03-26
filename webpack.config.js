@@ -1,11 +1,12 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
 const devMode = process.env.NODE_ENV !== "production";
 
 module.exports = {
   mode: process.env.NODE_ENV,
-  entry: ["./src/client/index.js"],
+  entry: ["./src/client/index.tsx"],
   output: {
     filename: "bundle.js",
     path: path.resolve(__dirname, "build"),
@@ -13,6 +14,15 @@ module.exports = {
   devtool: "eval-source-map",
   module: {
     rules: [
+      {
+        test: /.(ts|tsx)$/,
+        exclude: /node_modules/,
+        use: [
+          {
+            loader: "ts-loader",
+          },
+        ],
+      },
       {
         test: /.(js|jsx)$/,
         exclude: /node_modules/,
@@ -26,13 +36,8 @@ module.exports = {
       {
         test: /\.s?[ac]ss$/,
         use: [
-          // Creates `style` nodes from JS strings
-          //"style-loader",
           devMode ? "style-loader" : MiniCssExtractPlugin.loader,
-          // Translates CSS into CommonJS
           { loader: "css-loader", options: { url: false, sourceMap: true } },
-          // "postcss-loader",
-          // Compiles Sass to CSS
           { loader: "sass-loader", options: { sourceMap: true } },
         ],
       },
@@ -41,7 +46,7 @@ module.exports = {
         use: "html-loader",
       },
       {
-        test: /\.(jpe?g|png)$/i,
+        test: /\.(jpe?g|png|gif)$/i,
         type: "asset/resource",
         generator: {
           filename: "images/[name]-[hash][ext]",
@@ -62,6 +67,17 @@ module.exports = {
           },
         },
       },
+      {
+        test: /\.svg$/,
+        use: [
+          {
+            loader: "svg-url-loader",
+            options: {
+              limit: 10000,
+            },
+          },
+        ],
+      },
     ],
   },
   devServer: {
@@ -79,6 +95,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: "index.html",
     }),
+    new FaviconsWebpackPlugin("public/Henka-Icon.svg"),
   ].concat(
     devMode
       ? []
@@ -89,6 +106,7 @@ module.exports = {
         ]
   ),
   resolve: {
+    extensions: ["*", ".js", ".jsx", ".tsx", ".ts"],
     alias: { "react-dom": "@hot-loader/react-dom" },
   },
 };

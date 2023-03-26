@@ -1,7 +1,7 @@
 /**
  * ************************************
  *
- * @module  store.js
+ * @module  store.ts
  * @author
  * @date
  * @description Redux 'single source of truth'

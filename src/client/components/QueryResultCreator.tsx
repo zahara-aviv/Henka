@@ -12,7 +12,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  findRecord,
+  // findRecord,
   setRecordType,
   setSearchString,
   setRecordList,
@@ -22,10 +22,13 @@ import {
 import RECORD_TYPES from "../enums";
 import getRecords from "../utils";
 import { searchRecords } from "../utils";
+import type { LinkStore } from "../slices";
 
 const QueryResultCreator = function (props) {
   const dispatch = useDispatch();
-  const searchString = useSelector((state) => state.links.searchString);
+  const searchString = useSelector(
+    (state: LinkStore) => state.links.searchString
+  );
 
   const handleFilter = async (e) => {
     dispatch(setRecordType(e.target.value));

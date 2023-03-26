@@ -16,7 +16,6 @@ import { faThumbsUp as faUpVote } from "@fortawesome/free-solid-svg-icons";
 import { faThumbsDown as faDownVote } from "@fortawesome/free-regular-svg-icons";
 import {
   setDeletedLink,
-  setRecordList,
   setModal,
   setButtonState,
   setCurrentContext,
@@ -27,20 +26,40 @@ import {
   updateRecordList,
   clearDeletedLinks,
 } from "../slices";
-import getRecords from "../utils";
+import type { LinkStore } from "../slices";
 
-const QueryResult = (props) => {
-  const getColor = (health) => {
+type QueryResultProps = {
+  id: number;
+  urlID: number;
+  _ID: number;
+  confID: number;
+  recordName: string;
+  recordType: string;
+  linkList: string;
+  description: string;
+  recordTypeID: number;
+  upVotes: number;
+  downVotes: number;
+  health: number[];
+};
+
+const QueryResult = (props: QueryResultProps) => {
+  const getColor = (health: number) => {
     if (health > 90) return "green";
     if (health > 75) return "yellow";
     if (health > 50) return "orange";
     return "red";
   };
   const dispatch = useDispatch();
-  const deleteLinkList = useSelector((state) => state.links.deleteLinkList);
-  const updateLinkList = useSelector((state) => state.links.updateLinkList);
-  const recordType = useSelector((state) => state.links.recordType);
-  const buttonStates = useSelector((state) => state.links.buttonStates);
+  const deleteLinkList = useSelector(
+    (state: LinkStore) => state.links.deleteLinkList
+  );
+  const updateLinkList = useSelector(
+    (state: LinkStore) => state.links.updateLinkList
+  );
+  const buttonStates = useSelector(
+    (state: LinkStore) => state.links.buttonStates
+  );
   // keep track of button clicks
 
   const handleDeleteLink = async () => {
@@ -54,25 +73,20 @@ const QueryResult = (props) => {
     }
     for (const id in updateLinkList) {
       let update = false;
-      for (const key in updateLinkList[id]) {
-        update = update || updateLinkList[id][key];
-        if (update) break;
-      }
-      if (update) {
-        await fetch("/api/id/" + id, { method: "GET" })
-          .then((res) => res.json())
-          .then((data) => {
-            // console.log(data);
-            dispatch(updateRecordList(data));
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      }
+      // only update if set to true
+      if (!updateLinkList[id]) continue;
+
+      await fetch("/api/id/" + id, { method: "GET" })
+        .then((res) => res.json())
+        .then((data) => {
+          // console.log(data);
+          dispatch(updateRecordList(data));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
-    dispatch(clearDeletedLinks());
-    // const results = await getRecords(recordType);
-    // dispatch(setRecordList(results));
+    dispatch(clearDeletedLinks({}));
   };
 
   const handleAddLink = () => {
@@ -139,10 +153,11 @@ const QueryResult = (props) => {
   };
 
   const setUpVote = async (e, idx) => {
-    const _id = props._ID[idx];
+    const _id = props._ID;
     let update = false;
-    let up, down;
-    if (!([_id] in buttonStates)) {
+    let up = false;
+    let down = false;
+    if (buttonStates[_id] === undefined) {
       //first time...
       up = true;
       down = false;
@@ -172,8 +187,9 @@ const QueryResult = (props) => {
   const setDownVote = async (e, idx) => {
     const _id = props._ID[idx];
     let update = false;
-    let up, down;
-    if (!([_id] in buttonStates)) {
+    let up = false;
+    let down = false;
+    if (buttonStates[_id] === undefined) {
       //first time...
       up = false;
       down = true;
@@ -200,62 +216,63 @@ const QueryResult = (props) => {
     }
   };
 
-  const links = props.linkList.map((elem, idx) => {
-    const _id = props._ID[idx];
-    return (
-      <link-box key={elem + idx}>
-        <input
-          type="checkbox"
-          id="delete"
-          onClick={() =>
-            dispatch(
-              setDeletedLink({ _id, record_type_id: props.recordTypeID })
-            )
-          }
-          name={"delete" + idx}
-          value=""
-          key={"radio" + idx}
-        />
+  const elem = props.linkList;
+  const idx = 0;
+  const _id = props._ID[idx];
+  // const links = props.linkList.map((elem, idx) => {
+  //   const _id = props._ID[idx];
+  //   return (
+  const links = (
+    <div className="link-box" key={elem + idx}>
+      <input
+        type="checkbox"
+        id="delete"
+        onClick={() =>
+          dispatch(setDeletedLink({ _id, record_type_id: props.recordTypeID }))
+        }
+        name={"delete" + idx}
+        value=""
+        key={"radio" + idx}
+      />
 
-        <a
-          href={elem}
-          className="link-text"
-          title={props.description}
-          key={"Link" + idx}
-        >
-          {`Link ${idx + 1}`}
-        </a>
-        <svg className="icon">
-          <circle
-            cx={5}
-            cy={5}
-            r={5}
-            fill={getColor(props.health[idx])}
-            key={"icon" + idx}
-          />
-        </svg>
-        <>{props.health[idx] + "%"}</>
-        <span
-          className={
-            buttonStates[_id] && buttonStates[_id].up ? "up-vote on" : "up-vote"
-          }
-          onClick={(e) => setUpVote(e, idx)}
-        >
-          <FAIcon icon={faUpVote} fill="currentColor" />
-        </span>
-        <span
-          className={
-            buttonStates[_id] && buttonStates[_id].down
-              ? "down-vote on"
-              : "down-vote"
-          }
-          onClick={(e) => setDownVote(e, idx)}
-        >
-          <FAIcon icon={faDownVote} fill="currentColor" />
-        </span>
-      </link-box>
-    );
-  });
+      <a
+        href={elem}
+        className="link-text"
+        title={props.description}
+        key={"Link" + idx}
+      >
+        {`Link ${idx + 1}`}
+      </a>
+      <svg className="icon">
+        <circle
+          cx={5}
+          cy={5}
+          r={5}
+          fill={getColor(props.health[idx])}
+          key={"icon" + idx}
+        />
+      </svg>
+      <>{props.health[idx] + "%"}</>
+      <span
+        className={
+          buttonStates[_id] && buttonStates[_id].up ? "up-vote on" : "up-vote"
+        }
+        onClick={(e) => setUpVote(e, idx)}
+      >
+        <FAIcon icon={faUpVote} fill="currentColor" />
+      </span>
+      <span
+        className={
+          buttonStates[_id] && buttonStates[_id].down
+            ? "down-vote on"
+            : "down-vote"
+        }
+        onClick={(e) => setDownVote(e, idx)}
+      >
+        <FAIcon icon={faDownVote} fill="currentColor" />
+      </span>
+    </div>
+  );
 
   return (
     <div className="LinkRecordBox">
@@ -271,7 +288,7 @@ const QueryResult = (props) => {
         <button
           className="primaryButton"
           key={1}
-          id={props.id}
+          id={String(props.id)}
           onClick={handleAddLink}
         >
           Add Link
@@ -281,7 +298,7 @@ const QueryResult = (props) => {
         <button
           className="secondaryButton"
           key={2}
-          id={props.id}
+          id={String(props.id)}
           onClick={handleDeleteLink}
         >
           Delete Link

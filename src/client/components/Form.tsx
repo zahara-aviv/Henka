@@ -13,22 +13,31 @@ import {
 import { VALID_RECORD_TYPES, STATE_NAMES, COUNTRY_NAMES } from "../enums";
 import getRecords from "../utils";
 import { getKeyByValue } from "../utils";
+import type { LinkStore } from "../slices";
 
 export const Form = (props) => {
   const dispatch = useDispatch();
-  const recordType = useSelector((state) => state.links.candidateRecordType);
-  const recordName = useSelector((state) => state.links.candidateRecordName);
+  const recordType = useSelector(
+    (state: LinkStore) => state.links.candidateRecordType
+  );
+  const recordName = useSelector(
+    (state: LinkStore) => state.links.candidateRecordName
+  );
   const recordDescription = useSelector(
-    (state) => state.links.candidateDescription
+    (state: LinkStore) => state.links.candidateDescription
   );
-  const recordURL = useSelector((state) => state.links.candidateRecordURL);
+  const recordURL = useSelector(
+    (state: LinkStore) => state.links.candidateRecordURL
+  );
   const formDisplaySelector = useSelector(
-    (state) => state.links.formDisplaySelector
+    (state: LinkStore) => state.links.formDisplaySelector
   );
-  const currentContext = useSelector((state) => state.links.currentContext);
+  const currentContext = useSelector(
+    (state: LinkStore) => state.links.currentContext
+  );
 
   const candidateRecordName = useSelector(
-    (state) => state.links.candidateRecordName
+    (state: LinkStore) => state.links.candidateRecordName
   );
   const recordTypeOptions = [
     <option id="default" value="" key="default"></option>,

@@ -1,11 +1,12 @@
 import RECORD_TYPES from "../enums";
+import { LinkRecord, RecordList } from "../slices";
 
-export function getKeyByValue(object, value) {
+export function getKeyByValue(object: { [x: string]: string }, value: string) {
   return Object.keys(object).find((key) => object[key] === value);
 }
 
-export default async function getRecords(key) {
-  const results = [];
+export default async function getRecords(key: string): Promise<LinkRecord[]> {
+  const results: LinkRecord[] = [];
   const type = getKeyByValue(RECORD_TYPES, key);
   if (!type) return results;
   const url = "/api/record/" + type;
@@ -22,8 +23,11 @@ export default async function getRecords(key) {
   return results;
 }
 
-export async function searchRecords(type, searchString) {
-  const results = [];
+export async function searchRecords(
+  type: string,
+  searchString: string
+): Promise<RecordList[]> {
+  const results: RecordList[] = [];
   await fetch("/api/search/" + searchString, {
     method: "POST",
     headers: { "Content-Type": "application/json" },

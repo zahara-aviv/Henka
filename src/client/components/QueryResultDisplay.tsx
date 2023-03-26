@@ -10,9 +10,8 @@
  */
 
 import React from "react";
-import QueryResult from "./QueryResult.jsx";
-import { useSelector, useDispatch } from "react-redux";
-import { addLink, deleteLink } from "../slices";
+import QueryResult from "./QueryResult.js";
+import { useSelector } from "react-redux";
 import RECORD_TYPES from "../enums";
 
 /*
@@ -63,12 +62,15 @@ link object:
     },
 ]
 */
+import type { LinkStore } from "../slices";
+
 const QueryResultDisplay = (props) => {
-  const recordList = useSelector((state) => state.links.recordList);
-  const displaySelector = useSelector((state) => state.links.displaySelector);
-  const dispatch = useDispatch();
-  const links = [];
-  const calculateHealth = (up, down) => {
+  const recordList = useSelector((state: LinkStore) => state.links.recordList);
+  const displaySelector = useSelector(
+    (state: LinkStore) => state.links.displaySelector
+  );
+  const links: JSX.Element[] = [];
+  const calculateHealth = (up: number, down: number) => {
     const result = Math.round(100 * eval(`${up} / (${down} + ${up})`));
     if (isNaN(result)) return 0;
     return result;

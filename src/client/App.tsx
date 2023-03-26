@@ -1,8 +1,8 @@
 /**
  * ************************************
  *
- * @module  App.jsx
- * @author
+ * @module  App.tsx
+ * @author Zahara Aviv
  * @date
  * @description
  *
