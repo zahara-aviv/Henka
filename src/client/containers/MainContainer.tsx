@@ -14,13 +14,13 @@ import { useSelector, useDispatch } from "react-redux";
 import { setModal } from "../slices";
 
 // import from child components...
-import SummaryDisplay from "../components/SummaryDisplay.js";
-import QueryContainer from "./QueryContainer.jsx";
-import EntryContainer from "./EntryContainer.js";
-import ModalContainer from "./ModalContainer.jsx";
+import SummaryDisplay from "../components/SummaryDisplay";
+import QueryContainer from "./QueryContainer";
+import EntryContainer from "./EntryContainer";
+import ModalContainer from "./ModalContainer";
 import type { LinkStore } from "../slices";
 
-function MainContainer(props) {
+function MainContainer(props: {}) {
   const triggerText: string = "Open form";
   // const onSubmit = (event) => {
   //   event.preventDefault(event);

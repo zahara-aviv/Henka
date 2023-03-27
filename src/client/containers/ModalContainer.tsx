@@ -1,5 +1,10 @@
-import React, { Component } from "react";
-import { Modal } from "../components/Modal.js";
+import React, {
+  Component,
+  KeyboardEventHandler,
+  MouseEvent,
+  KeyboardEvent,
+} from "react";
+import { Modal } from "../components/Modal";
 interface ModalContainerProps {
   isShown: boolean;
   triggerText: string;
@@ -7,28 +12,35 @@ interface ModalContainerProps {
 }
 
 export class ModalContainer extends Component<ModalContainerProps> {
-  modal: React.RefObject<Element>;
-  closeButton: React.RefObject<Element>;
+  modal: React.RefObject<HTMLDivElement> | null;
+  closeButton: React.RefObject<HTMLButtonElement> | null;
   constructor(props: ModalContainerProps) {
     super(props);
+    this.modal = null;
+    this.closeButton = null;
   }
   showModal = () => {
     this.props.setModal(true);
     // this.closeButton.focus();
     this.toggleScrollLock();
   };
-  closeModal = () => {
+  closeModal = (event?: MouseEvent) => {
     this.props.setModal(false);
     // this.triggerRef.focus();
     this.toggleScrollLock();
   };
-  onKeyDown = (event: KeyboardEvent) => {
+  onKeyDown: KeyboardEventHandler = (event: KeyboardEvent<Element>) => {
     if (event.key === "Escape") {
       this.closeModal();
     }
   };
-  onClickOutside = (event: MouseEvent) => {
-    // if (this.modal && this.modal.contains(event.target)) return;
+  onClickOutside = (event: MouseEvent<HTMLAreaElement>) => {
+    if (
+      this.modal !== null &&
+      this.modal.current !== null &&
+      this.modal.current.contains(event.target as Node)
+    )
+      return;
     this.closeModal();
   };
 
@@ -41,8 +53,10 @@ export class ModalContainer extends Component<ModalContainerProps> {
       <React.Fragment>
         {this.props.isShown ? (
           <Modal
-            modalRef={(n: React.RefObject<Element>) => (this.modal = n)}
-            buttonRef={(n: React.RefObject<Element>) => (this.closeButton = n)}
+            modalRef={(n: React.RefObject<HTMLDivElement>) => (this.modal = n)}
+            buttonRef={(n: React.RefObject<HTMLButtonElement>) =>
+              (this.closeButton = n)
+            }
             closeModal={this.closeModal}
             onKeyDown={this.onKeyDown}
             onClickOutside={this.onClickOutside}

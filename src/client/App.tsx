@@ -8,9 +8,9 @@
  *
  * ************************************
  */
-import { hot } from "react-hot-loader/root";
+// import { hot } from "react-hot-loader/root";
 import React, { Component } from "react";
-import MainContainer from "./containers/MainContainer.jsx";
+import MainContainer from "./containers/MainContainer";
 
 /*
 Heirarchy
@@ -22,8 +22,8 @@ Heirarchy
           |—- QueryResultDisplay
               |—- QueryResult 
 */
-class App extends Component {
-  constructor(props) {
+class App extends Component<{}> {
+  constructor(props: {}) {
     super(props);
   }
 
@@ -36,4 +36,4 @@ class App extends Component {
   }
 }
 
-export default hot(App);
+export default App;

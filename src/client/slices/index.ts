@@ -17,10 +17,10 @@ export type LinkState = {
   candidateRecordURL: string;
   candidateDescription: string;
   // candidateRecordList: [];
-  currentContext: CurrentContext | {};
+  currentContext: CurrentContext | undefined;
   lastRecordId: number;
   searchString: string;
-  buttonStates: ButtonState | {};
+  buttonStates: ButtonState | undefined;
 };
 
 export type CurrentContext = {
@@ -71,10 +71,10 @@ const initialState: LinkState = {
   candidateRecordURL: "",
   candidateDescription: "",
   // candidateRecordList: [],
-  currentContext: {},
+  currentContext: undefined,
   lastRecordId: 0,
   searchString: "",
-  buttonStates: {},
+  buttonStates: undefined,
 };
 
 export type LinkStore = {

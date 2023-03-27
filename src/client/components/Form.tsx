@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ChangeEvent, ChangeEventHandler, FormEvent } from "react";
 import isUrl from "is-url";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -11,11 +11,10 @@ import {
   setModal,
 } from "../slices";
 import { VALID_RECORD_TYPES, STATE_NAMES, COUNTRY_NAMES } from "../enums";
-import getRecords from "../utils";
 import { getKeyByValue } from "../utils";
-import type { LinkStore } from "../slices";
+import type { LinkStore, CurrentContext } from "../slices";
 
-export const Form = (props) => {
+export const Form = (props: {}) => {
   const dispatch = useDispatch();
   const recordType = useSelector(
     (state: LinkStore) => state.links.candidateRecordType
@@ -69,39 +68,56 @@ export const Form = (props) => {
     ))
   );
 
-  const handleRecTypeSelect = (e) => {
+  const handleRecTypeSelect: ChangeEventHandler = (
+    e: ChangeEvent<HTMLTextAreaElement>
+  ) => {
     dispatch(setCandidateRecordType(e.target.value));
     dispatch(setCandidateRecordName(""));
     dispatch(setFormDisplaySelector(e.target.value));
   };
-  const handleStateSelect = (e) => {
+  const handleStateSelect: ChangeEventHandler = (
+    e: ChangeEvent<HTMLTextAreaElement>
+  ) => {
     dispatch(setCandidateRecordName(e.target.value));
   };
-  const handleCountrySelect = (e) => {
+  const handleCountrySelect: ChangeEventHandler = (
+    e: ChangeEvent<HTMLTextAreaElement>
+  ) => {
     dispatch(setCandidateRecordName(e.target.value));
   };
-  const updateRecordName = (e) => {
+  const updateRecordName: ChangeEventHandler = (
+    e: ChangeEvent<HTMLTextAreaElement>
+  ) => {
     dispatch(setCandidateRecordName(e.target.value));
   };
-  const updateURL = (e) => {
+  const updateURL: ChangeEventHandler = (
+    e: ChangeEvent<HTMLTextAreaElement>
+  ) => {
     dispatch(setCandidateRecordURL(e.target.value));
   };
-  const updateDescription = (e) => {
+  const updateDescription: ChangeEventHandler = (
+    e: ChangeEvent<HTMLTextAreaElement>
+  ) => {
     dispatch(setCandidateRecordDescription(e.target.value));
   };
-  const onSubmit = async (e) => {
+  type RecordBody = {
+    record_name: string;
+    record_type?: string;
+    url: string;
+    description: string;
+    record_type_id?: number;
+  };
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // post results to database
-    const body = {
+    const body: RecordBody = {
       record_name: recordName,
       record_type: getKeyByValue(VALID_RECORD_TYPES, recordType),
       url: recordURL,
       description: recordDescription,
     };
-    if ("record_type_id" in currentContext) {
+    if (currentContext !== undefined)
       body["record_type_id"] = currentContext.record_type_id;
-    }
-
     await fetch("/api/record", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -114,15 +130,17 @@ export const Form = (props) => {
       })
       .catch((err) => console.log(err));
     // update records
-    // const results = await getRecords(recordType);
-    // dispatch(setRecordList(results));
     dispatch(setModal(false));
   };
   return (
-    <form onSubmit={onSubmit}>
+    <form
+      onSubmit={(e: FormEvent<HTMLFormElement>) => {
+        onSubmit;
+      }}
+    >
       <div className="form-group">
         <label htmlFor="record-type">Record Type: </label>
-        {"record_type" in currentContext && "record_name" in currentContext ? (
+        {currentContext !== undefined ? (
           <>
             <select id="recordType">
               <option id={recordType} value={recordType} key={recordType}>

@@ -9,7 +9,7 @@
  * ************************************
  */
 
-import React from "react";
+import React, { MouseEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setCurrentContext,
@@ -20,14 +20,14 @@ import {
 } from "../slices";
 import type { LinkStore } from "../slices";
 
-const EntryCreator = function (props) {
+const EntryCreator = function (props: {}) {
   const dispatch = useDispatch();
   const searchString = useSelector(
     (state: LinkStore) => state.links.searchString
   );
 
-  const handleCreateRecord = (e) => {
-    dispatch(setCurrentContext({}));
+  const handleCreateRecord = (e: MouseEvent) => {
+    dispatch(setCurrentContext(undefined));
     dispatch(setCandidateRecordType(""));
     dispatch(setCandidateRecordName(""));
     dispatch(setFormDisplaySelector("None"));

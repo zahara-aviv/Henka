@@ -13,7 +13,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import type { LinkStore } from "../slices";
 
-const SummaryDisplay = (props) => {
+const SummaryDisplay = (props: {}) => {
   const totalRecords = useSelector(
     (state: LinkStore) => state.links.totalRecords
   );

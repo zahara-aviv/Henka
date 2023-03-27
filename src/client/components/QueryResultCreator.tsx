@@ -9,7 +9,7 @@
  * ************************************
  */
 
-import React from "react";
+import React, { ChangeEvent, ChangeEventHandler, MouseEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   // findRecord,
@@ -24,13 +24,15 @@ import getRecords from "../utils";
 import { searchRecords } from "../utils";
 import type { LinkStore } from "../slices";
 
-const QueryResultCreator = function (props) {
+const QueryResultCreator = function (props: {}) {
   const dispatch = useDispatch();
   const searchString = useSelector(
     (state: LinkStore) => state.links.searchString
   );
 
-  const handleFilter = async (e) => {
+  const handleFilter: ChangeEventHandler = async (
+    e: ChangeEvent<HTMLTextAreaElement>
+  ) => {
     dispatch(setRecordType(e.target.value));
     const results = await getRecords(e.target.value);
     dispatch(setRecordList(results));
@@ -38,7 +40,7 @@ const QueryResultCreator = function (props) {
     dispatch(setFormDisplaySelector(e.target.value));
   };
 
-  const handleFindRecordName = async (e) => {
+  const handleFindRecordName = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     // call database for string e.target.value
     const results = await searchRecords("record_type", searchString);
@@ -46,7 +48,7 @@ const QueryResultCreator = function (props) {
     dispatch(setDisplaySelector("Search"));
   };
 
-  const handleFindURL = async (e) => {
+  const handleFindURL = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     // call database for string e.target.value
     const results = await searchRecords("uri", searchString);
@@ -54,7 +56,9 @@ const QueryResultCreator = function (props) {
     dispatch(setDisplaySelector("Search"));
   };
 
-  const handleSetSearchString = (e) => {
+  const handleSetSearchString: ChangeEventHandler = (
+    e: ChangeEvent<HTMLTextAreaElement>
+  ) => {
     dispatch(setSearchString(e.target.value));
   };
 
@@ -92,14 +96,18 @@ const QueryResultCreator = function (props) {
           <button
             className="primaryButton"
             name="button-searchString"
-            onClick={handleFindRecordName}
+            onClick={(e) => {
+              handleFindRecordName(e);
+            }}
           >
             Search By Record Name
           </button>
           <button
             className="primaryButton"
             name="button-searchString"
-            onClick={handleFindURL}
+            onClick={(e): void => {
+              handleFindURL(e);
+            }}
           >
             Search By URL / Description
           </button>

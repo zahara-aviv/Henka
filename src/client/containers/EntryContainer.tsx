@@ -11,9 +11,9 @@
 
 import React from "react";
 // import actions from action creators file
-import EntryCreator from "../components/EntryCreator.jsx";
+import EntryCreator from "../components/EntryCreator";
 
-const EntryContainer = (props) => (
+const EntryContainer = (props: {}) => (
   <div className="innerbox">
     <EntryCreator />
   </div>

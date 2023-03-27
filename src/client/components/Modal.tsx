@@ -1,14 +1,24 @@
-import React from "react";
+import React, { useRef, KeyboardEventHandler, MouseEventHandler } from "react";
 import ReactDOM from "react-dom";
-import { Form } from "./Form.js";
+import { Form } from "./Form";
 import FocusTrap from "focus-trap-react";
-export const Modal = ({
-  onClickOutside,
-  onKeyDown,
-  modalRef,
-  buttonRef,
-  closeModal,
-}) => {
+type propType = {
+  onClickOutside: MouseEventHandler;
+  onKeyDown: KeyboardEventHandler;
+  modalRef: (
+    n: React.RefObject<HTMLDivElement>
+  ) => React.RefObject<HTMLDivElement>;
+  buttonRef: (
+    n: React.RefObject<HTMLButtonElement>
+  ) => React.RefObject<HTMLButtonElement>;
+  closeModal: MouseEventHandler;
+};
+export const Modal = (props: propType) => {
+  const { onClickOutside, onKeyDown, modalRef, buttonRef, closeModal } = props;
+  const divRef = useRef<HTMLDivElement | null>(null);
+  const btnRef = useRef<HTMLButtonElement | null>(null);
+  modalRef(divRef);
+  buttonRef(btnRef);
   return ReactDOM.createPortal(
     <FocusTrap>
       <aside
@@ -20,9 +30,9 @@ export const Modal = ({
         onClick={onClickOutside}
         onKeyDown={onKeyDown}
       >
-        <div className="modal-area" ref={modalRef}>
+        <div className="modal-area" ref={divRef}>
           <button
-            ref={buttonRef}
+            ref={btnRef}
             aria-label="Close Modal"
             aria-labelledby="close-modal"
             className="_modal-close"

@@ -10,7 +10,7 @@
  */
 
 import React from "react";
-import QueryResult from "./QueryResult.js";
+import QueryResult from "./QueryResult";
 import { useSelector } from "react-redux";
 import RECORD_TYPES from "../enums";
 
@@ -64,7 +64,7 @@ link object:
 */
 import type { LinkStore } from "../slices";
 
-const QueryResultDisplay = (props) => {
+const QueryResultDisplay = (props: {}) => {
   const recordList = useSelector((state: LinkStore) => state.links.recordList);
   const displaySelector = useSelector(
     (state: LinkStore) => state.links.displaySelector
@@ -103,11 +103,7 @@ const QueryResultDisplay = (props) => {
         recordTypeID={link.record_type_id}
         upVotes={link.upvote}
         downVotes={link.downvote}
-        health={
-          Array.isArray(link.upvote)
-            ? link.upvote.map((up, i) => calculateHealth(up, link.downvote[i]))
-            : [calculateHealth(link.upvote, link.downvote)]
-        }
+        health={[calculateHealth(link.upvote, link.downvote)]}
       />
     );
   }

@@ -11,10 +11,10 @@
 
 import React from "react";
 // import actions from action creators file
-import QueryResultCreator from "../components/QueryResultCreator.js";
-import QueryResultDisplay from "../components/QueryResultDisplay.js";
+import QueryResultCreator from "../components/QueryResultCreator";
+import QueryResultDisplay from "../components/QueryResultDisplay";
 
-const QueryContainer = (props) => (
+const QueryContainer = (props: {}) => (
   <div className="innerbox">
     <QueryResultCreator />
     <QueryResultDisplay />

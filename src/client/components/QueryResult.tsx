@@ -9,7 +9,7 @@
  * ************************************
  */
 
-import React from "react";
+import React, { MouseEvent } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { FontAwesomeIcon as FAIcon } from "@fortawesome/react-fontawesome";
 import { faThumbsUp as faUpVote } from "@fortawesome/free-solid-svg-icons";
@@ -104,10 +104,10 @@ const QueryResult = (props: QueryResultProps) => {
     dispatch(setModal(true));
   };
 
-  const updateUpVote = async (increase, idx) => {
+  const updateUpVote = async (increase: boolean, idx?: number) => {
     const path = "/api/vote/";
-    let upvote = Number(props.upVotes[idx]);
-    let downvote = Number(props.downVotes[idx]);
+    let upvote = Number(props.upVotes);
+    let downvote = Number(props.downVotes);
     if (increase) upvote++;
     else upvote--;
 
@@ -115,7 +115,7 @@ const QueryResult = (props: QueryResultProps) => {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        _id: Number(props.confID[idx]),
+        _id: Number(props.confID),
         upvote,
         downvote,
       }),
@@ -128,10 +128,10 @@ const QueryResult = (props: QueryResultProps) => {
       .catch((err) => console.log(err));
   };
 
-  const updateDownVote = async (increase, idx) => {
+  const updateDownVote = async (increase: boolean, idx?: number) => {
     const path = "/api/vote/";
-    let upvote = Number(props.upVotes[idx]);
-    let downvote = Number(props.downVotes[idx]);
+    let upvote = Number(props.upVotes);
+    let downvote = Number(props.downVotes);
     if (increase) downvote++;
     else downvote--;
 
@@ -139,7 +139,7 @@ const QueryResult = (props: QueryResultProps) => {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        _id: Number(props.confID[idx]),
+        _id: Number(props.confID),
         upvote,
         downvote,
       }),
@@ -152,20 +152,20 @@ const QueryResult = (props: QueryResultProps) => {
       .catch((err) => console.log(err));
   };
 
-  const setUpVote = async (e, idx) => {
+  const setUpVote = async (e: MouseEvent, idx: number) => {
     const _id = props._ID;
     let update = false;
     let up = false;
     let down = false;
-    if (buttonStates[_id] === undefined) {
+    if (buttonStates === undefined || buttonStates[_id] === undefined) {
       //first time...
       up = true;
       down = false;
       dispatch(setButtonState({ _id, state: { up, down } }));
       update = true;
-    } else if (!buttonStates[_id].down) {
-      up = !buttonStates[_id].up;
-      down = buttonStates[_id].down;
+    } else if (!buttonStates[_id].state.down) {
+      up = !buttonStates[_id].state.up;
+      down = buttonStates[_id].state.down;
       dispatch(
         setButtonState({
           _id,
@@ -184,20 +184,20 @@ const QueryResult = (props: QueryResultProps) => {
     }
   };
 
-  const setDownVote = async (e, idx) => {
-    const _id = props._ID[idx];
+  const setDownVote = async (e: MouseEvent, idx: number) => {
+    const _id = props._ID;
     let update = false;
     let up = false;
     let down = false;
-    if (buttonStates[_id] === undefined) {
+    if (buttonStates === undefined || buttonStates[_id] === undefined) {
       //first time...
       up = false;
       down = true;
       dispatch(setButtonState({ _id, state: { up, down } }));
       update = true;
-    } else if (!buttonStates[_id].up) {
-      down = !buttonStates[_id].down;
-      up = buttonStates[_id].up;
+    } else if (!buttonStates[_id].state.up) {
+      down = !buttonStates[_id].state.down;
+      up = buttonStates[_id].state.up;
       dispatch(
         setButtonState({
           _id,
@@ -218,7 +218,7 @@ const QueryResult = (props: QueryResultProps) => {
 
   const elem = props.linkList;
   const idx = 0;
-  const _id = props._ID[idx];
+  const _id = props._ID;
   // const links = props.linkList.map((elem, idx) => {
   //   const _id = props._ID[idx];
   //   return (
@@ -255,15 +255,21 @@ const QueryResult = (props: QueryResultProps) => {
       <>{props.health[idx] + "%"}</>
       <span
         className={
-          buttonStates[_id] && buttonStates[_id].up ? "up-vote on" : "up-vote"
+          buttonStates !== undefined &&
+          buttonStates[_id] !== undefined &&
+          buttonStates[_id].state.up
+            ? "up-vote on"
+            : "up-vote"
         }
-        onClick={(e) => setUpVote(e, idx)}
+        onClick={(e: MouseEvent) => setUpVote(e, idx)}
       >
         <FAIcon icon={faUpVote} fill="currentColor" />
       </span>
       <span
         className={
-          buttonStates[_id] && buttonStates[_id].down
+          buttonStates !== undefined &&
+          buttonStates[_id] &&
+          buttonStates[_id].state.down
             ? "down-vote on"
             : "down-vote"
         }
