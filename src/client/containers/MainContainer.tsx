@@ -19,6 +19,7 @@ import QueryContainer from "./QueryContainer";
 import EntryContainer from "./EntryContainer";
 import ModalContainer from "./ModalContainer";
 import type { LinkStore } from "../slices";
+const LOGO = require("../../../public/Henka-Logo.svg").default;
 
 function MainContainer(props: {}) {
   const triggerText: string = "Open form";
@@ -33,7 +34,10 @@ function MainContainer(props: {}) {
   return (
     <div className="container">
       <div className="outerBox">
-        <h1 id="header">Name Change Resource Database</h1>
+        {/* <h1 id="header">Name Change Resource Database</h1> */}
+        <div className="centered">
+          <img className="logo" src={LOGO} />
+        </div>
         <SummaryDisplay />
         <QueryContainer />
         <EntryContainer />
