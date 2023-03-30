@@ -15,5 +15,5 @@ npm run dev
 - Implement admin user accounts for updating the database.
 - Containerize
 - Deploy to AWS
-- Convert to TypeScript
+- Convert backend to TypeScript
 - Convert Redux logic to ReactHooks/ ReactQuery
