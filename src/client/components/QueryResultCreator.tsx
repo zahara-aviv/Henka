@@ -9,8 +9,8 @@
  * ************************************
  */
 
-import React, { ChangeEvent, ChangeEventHandler, MouseEvent } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { ChangeEvent, ChangeEventHandler, MouseEvent } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   // findRecord,
   setRecordType,
@@ -18,11 +18,11 @@ import {
   setRecordList,
   setDisplaySelector,
   setFormDisplaySelector,
-} from "../slices";
-import RECORD_TYPES from "../enums";
-import getRecords from "../utils";
-import { searchRecords } from "../utils";
-import type { LinkStore } from "../slices";
+} from '../slices';
+import RECORD_TYPES from '../enums';
+import getRecords from '../utils';
+import { searchRecords } from '../utils';
+import type { LinkStore } from '../slices';
 
 const QueryResultCreator = function (props: {}) {
   const dispatch = useDispatch();
@@ -43,17 +43,17 @@ const QueryResultCreator = function (props: {}) {
   const handleFindRecordName = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     // call database for string e.target.value
-    const results = await searchRecords("record_type", searchString);
+    const results = await searchRecords('record_type', searchString);
     dispatch(setRecordList(results));
-    dispatch(setDisplaySelector("Search"));
+    dispatch(setDisplaySelector('Search'));
   };
 
   const handleFindURL = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     // call database for string e.target.value
-    const results = await searchRecords("uri", searchString);
+    const results = await searchRecords('uri', searchString);
     dispatch(setRecordList(results));
-    dispatch(setDisplaySelector("Search"));
+    dispatch(setDisplaySelector('Search'));
   };
 
   const handleSetSearchString: ChangeEventHandler = (
@@ -63,7 +63,7 @@ const QueryResultCreator = function (props: {}) {
   };
 
   const options = [
-    <option id="default" value="" key="default"></option>,
+    <option id='default' value='' key='default'></option>,
   ].concat(
     Object.values(RECORD_TYPES).map((elem, idx) => (
       <option id={elem + idx} value={elem} key={idx}>
@@ -73,29 +73,29 @@ const QueryResultCreator = function (props: {}) {
   );
   return (
     <div>
-      <p className="title-heading">
+      <p className='title-heading'>
         <strong>Search Database </strong>
       </p>
-      <div className="title-heading">
+      <div className='title-heading'>
         <label>Type Filter: </label>
-        <select id="recordTypeFilter" onChange={handleFilter}>
+        <select id='recordTypeFilter' onChange={handleFilter}>
           {options}
         </select>
       </div>
       <form>
-        <label className="SearchBtnOptions">
+        <label className='SearchBtnOptions'>
           <input
-            id="search-text"
-            type="text"
+            id='search-text'
+            type='text'
             value={searchString}
-            name="input-search-text"
+            name='input-search-text'
             onChange={handleSetSearchString}
           ></input>
         </label>
-        <div className="SearchBtnOptions">
+        <div className='SearchBtnOptions'>
           <button
-            className="primaryButton"
-            name="button-searchString"
+            className='primaryButton'
+            name='button-searchString'
             onClick={(e) => {
               handleFindRecordName(e);
             }}
@@ -103,8 +103,8 @@ const QueryResultCreator = function (props: {}) {
             Search By Record Name
           </button>
           <button
-            className="primaryButton"
-            name="button-searchString"
+            className='primaryButton'
+            name='button-searchString'
             onClick={(e): void => {
               handleFindURL(e);
             }}

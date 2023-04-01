@@ -15,7 +15,7 @@ $screen-xl-min: 1200px;
 
 * {
   box-sizing: border-box;
-  font-family: "Ubuntu Light", "Century Gothic", sans-serif;
+  font-family: 'Ubuntu Light', 'Century Gothic', sans-serif;
   margin: 0;
   padding: 0;
   // color: #393939;
@@ -53,20 +53,26 @@ body {
 }
 
 .LinkRecordBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding: 0.5rem;
   // width: 100a;
-  min-width: 80%;
-  margin: 5px 5px 13px 10px;
+  // min-width: 25%;
+  margin: 0.25rem;
   float: left;
-  font-size: 0.8em;
+  font-size: 0.8rem;
   box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
   border-radius: 0.5rem;
+  strong {
+    padding-left: 0.5rem;
+  }
 }
 
 #header {
   text-align: center;
-  letter-spacing: 0.2em;
-  margin-bottom: 10px;
+  letter-spacing: 0.2rem;
+  margin-bottom: 0.2rem;
 }
 
 #totals {
@@ -122,20 +128,27 @@ button {
 .modal-area {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: start;
   width: 100%;
-  height: 50%;
-  padding: 2.5em 1.5em 1.5em 1.5em;
+  padding: 0em 1.5em 1.5em 1.5em;
   background-color: #ffffff;
   box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
 
+.modal-area-container {
+  height: 100vh;
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 ._modal-close {
-  position: absolute;
-  top: 0;
-  right: 0;
+  position: relative;
+  align-self: flex-end;
+  margin-right: -1.5em;
   padding: 0.5em;
   line-height: 1;
   background: #f6f6f7;
@@ -253,7 +266,7 @@ button {
     border-color: lighten($button-blue, 10%);
     padding-left: 1em;
     padding-right: 1em;
-    width: calc($char-card-width / 2);
+    min-width: calc($char-card-width / 2);
   }
 }
 

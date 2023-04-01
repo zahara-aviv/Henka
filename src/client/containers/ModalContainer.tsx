@@ -3,8 +3,8 @@ import React, {
   KeyboardEventHandler,
   MouseEvent,
   KeyboardEvent,
-} from "react";
-import { Modal } from "../components/Modal";
+} from 'react';
+import { Modal } from '../components/Modal';
 interface ModalContainerProps {
   isShown: boolean;
   triggerText: string;
@@ -29,8 +29,8 @@ export class ModalContainer extends Component<ModalContainerProps> {
     // this.triggerRef.focus();
     this.toggleScrollLock();
   };
-  onKeyDown: KeyboardEventHandler = (event: KeyboardEvent<Element>) => {
-    if (event.key === "Escape") {
+  onKeyDown: KeyboardEventHandler = (event: KeyboardEvent) => {
+    if (event.key === 'Escape') {
       this.closeModal();
     }
   };
@@ -45,8 +45,8 @@ export class ModalContainer extends Component<ModalContainerProps> {
   };
 
   toggleScrollLock = () => {
-    const html = document.querySelector("html");
-    if (html !== null) html.classList.toggle("scroll-lock");
+    const html = document.querySelector('html');
+    if (html !== null) html.classList.toggle('scroll-lock');
   };
   render = () => {
     return (

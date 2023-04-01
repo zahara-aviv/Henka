@@ -9,8 +9,8 @@
  * ************************************
  */
 
-import { configureStore } from "@reduxjs/toolkit";
-import linkRecordReducer from "./slices";
+import { configureStore } from '@reduxjs/toolkit';
+import linkRecordReducer from './slices';
 
 const store = configureStore({
   reducer: {

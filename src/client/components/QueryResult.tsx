@@ -9,11 +9,11 @@
  * ************************************
  */
 
-import React, { MouseEvent } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { FontAwesomeIcon as FAIcon } from "@fortawesome/react-fontawesome";
-import { faThumbsUp as faUpVote } from "@fortawesome/free-solid-svg-icons";
-import { faThumbsDown as faDownVote } from "@fortawesome/free-regular-svg-icons";
+import React, { MouseEvent } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { FontAwesomeIcon as FAIcon } from '@fortawesome/react-fontawesome';
+import { faThumbsUp as faUpVote } from '@fortawesome/free-solid-svg-icons';
+import { faThumbsDown as faDownVote } from '@fortawesome/free-regular-svg-icons';
 import {
   setDeletedLink,
   setModal,
@@ -25,8 +25,8 @@ import {
   setFormDisplaySelector,
   updateRecordList,
   clearDeletedLinks,
-} from "../slices";
-import type { LinkStore } from "../slices";
+} from '../slices';
+import type { LinkStore } from '../slices';
 
 type QueryResultProps = {
   id: number;
@@ -45,10 +45,10 @@ type QueryResultProps = {
 
 const QueryResult = (props: QueryResultProps) => {
   const getColor = (health: number) => {
-    if (health > 90) return "green";
-    if (health > 75) return "yellow";
-    if (health > 50) return "orange";
-    return "red";
+    if (health > 90) return 'green';
+    if (health > 75) return 'yellow';
+    if (health > 50) return 'orange';
+    return 'red';
   };
   const dispatch = useDispatch();
   const deleteLinkList = useSelector(
@@ -66,7 +66,7 @@ const QueryResult = (props: QueryResultProps) => {
     // console.log(deleteLinkList);
     for (const id in deleteLinkList) {
       if (deleteLinkList[id] === true) {
-        await fetch("/api/id/" + id, { method: "DELETE" }).catch((err) => {
+        await fetch('/api/id/' + id, { method: 'DELETE' }).catch((err) => {
           console.log(err);
         });
       }
@@ -76,7 +76,7 @@ const QueryResult = (props: QueryResultProps) => {
       // only update if set to true
       if (!updateLinkList[id]) continue;
 
-      await fetch("/api/id/" + id, { method: "GET" })
+      await fetch('/api/id/' + id, { method: 'GET' })
         .then((res) => res.json())
         .then((data) => {
           // console.log(data);
@@ -99,21 +99,21 @@ const QueryResult = (props: QueryResultProps) => {
     );
     dispatch(setCandidateRecordType(props.recordType));
     dispatch(setCandidateRecordName(props.recordName));
-    dispatch(setCandidateRecordURL(""));
-    dispatch(setFormDisplaySelector("None"));
+    dispatch(setCandidateRecordURL(''));
+    dispatch(setFormDisplaySelector('None'));
     dispatch(setModal(true));
   };
 
   const updateUpVote = async (increase: boolean, idx?: number) => {
-    const path = "/api/vote/";
+    const path = '/api/vote/';
     let upvote = Number(props.upVotes);
     let downvote = Number(props.downVotes);
     if (increase) upvote++;
     else upvote--;
 
     await fetch(path, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         _id: Number(props.confID),
         upvote,
@@ -129,15 +129,15 @@ const QueryResult = (props: QueryResultProps) => {
   };
 
   const updateDownVote = async (increase: boolean, idx?: number) => {
-    const path = "/api/vote/";
+    const path = '/api/vote/';
     let upvote = Number(props.upVotes);
     let downvote = Number(props.downVotes);
     if (increase) downvote++;
     else downvote--;
 
     await fetch(path, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         _id: Number(props.confID),
         upvote,
@@ -223,86 +223,87 @@ const QueryResult = (props: QueryResultProps) => {
   //   const _id = props._ID[idx];
   //   return (
   const links = (
-    <div className="link-box" key={elem + idx}>
+    <div className='link-box' key={elem + idx}>
       <input
-        type="checkbox"
-        id="delete"
+        type='checkbox'
+        id='delete'
         onClick={() =>
           dispatch(setDeletedLink({ _id, record_type_id: props.recordTypeID }))
         }
-        name={"delete" + idx}
-        value=""
-        key={"radio" + idx}
+        name={'delete' + idx}
+        value=''
+        key={'radio' + idx}
       />
 
       <a
         href={elem}
-        className="link-text"
+        className='link-text'
         title={props.description}
-        key={"Link" + idx}
+        key={'Link' + idx}
       >
         {`Link ${idx + 1}`}
       </a>
-      <svg className="icon">
+      <svg className='icon'>
         <circle
           cx={5}
           cy={5}
           r={5}
           fill={getColor(props.health[idx])}
-          key={"icon" + idx}
+          key={'icon' + idx}
         />
       </svg>
-      <>{props.health[idx] + "%"}</>
+      <>{props.health[idx] + '%'}</>
       <span
         className={
           buttonStates !== undefined &&
           buttonStates[_id] !== undefined &&
           buttonStates[_id].state.up
-            ? "up-vote on"
-            : "up-vote"
+            ? 'up-vote on'
+            : 'up-vote'
         }
         onClick={(e: MouseEvent) => setUpVote(e, idx)}
       >
-        <FAIcon icon={faUpVote} fill="currentColor" />
+        <FAIcon icon={faUpVote} fill='currentColor' />
       </span>
       <span
         className={
           buttonStates !== undefined &&
           buttonStates[_id] &&
           buttonStates[_id].state.down
-            ? "down-vote on"
-            : "down-vote"
+            ? 'down-vote on'
+            : 'down-vote'
         }
         onClick={(e) => setDownVote(e, idx)}
       >
-        <FAIcon icon={faDownVote} fill="currentColor" />
+        <FAIcon icon={faDownVote} fill='currentColor' />
       </span>
     </div>
   );
 
   return (
-    <div className="LinkRecordBox">
+    <div className='LinkRecordBox'>
       <p>
         <strong>{props.recordType}: </strong>
         {props.recordName}
       </p>
-      <p>
-        <strong>Links: </strong>
-        {links}
-      </p>
-      <div className="BtnOptions">
+      {links}
+      <div className='BtnOptions'>
         <button
-          className="primaryButton"
+          className='primaryButton'
           key={1}
           id={String(props.id)}
-          onClick={handleAddLink}
+          onClick={() => {
+            handleAddLink();
+            const html = document.querySelector('html');
+            if (html !== null) html.classList.toggle('scroll-lock');
+          }}
         >
           Add Link
         </button>
       </div>
-      <div className="BtnOptions">
+      <div className='BtnOptions'>
         <button
-          className="secondaryButton"
+          className='secondaryButton'
           key={2}
           id={String(props.id)}
           onClick={handleDeleteLink}

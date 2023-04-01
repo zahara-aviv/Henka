@@ -9,8 +9,8 @@
  * ************************************
  */
 // import { hot } from "react-hot-loader/root";
-import React, { Component } from "react";
-import MainContainer from "./containers/MainContainer";
+import React, { Component } from 'react';
+import MainContainer from './containers/MainContainer';
 
 /*
 Heirarchy

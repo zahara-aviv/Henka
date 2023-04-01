@@ -9,9 +9,9 @@
  * ************************************
  */
 
-import React from "react";
-import { useSelector } from "react-redux";
-import type { LinkStore } from "../slices";
+import React from 'react';
+import { useSelector } from 'react-redux';
+import type { LinkStore } from '../slices';
 
 const SummaryDisplay = (props: {}) => {
   const totalRecords = useSelector(
@@ -19,9 +19,9 @@ const SummaryDisplay = (props: {}) => {
   );
 
   return (
-    <div className="innerbox" id="totals">
-      <label htmlFor="totalRecords">
-        <strong className="total-display">Total Records: {totalRecords}</strong>
+    <div className='innerbox' id='totals'>
+      <label htmlFor='totalRecords'>
+        <strong className='total-display'>Total Records: {totalRecords}</strong>
       </label>
     </div>
   );

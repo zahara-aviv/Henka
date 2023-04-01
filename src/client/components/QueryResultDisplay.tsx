@@ -9,10 +9,10 @@
  * ************************************
  */
 
-import React from "react";
-import QueryResult from "./QueryResult";
-import { useSelector } from "react-redux";
-import RECORD_TYPES from "../enums";
+import React from 'react';
+import QueryResult from './QueryResult';
+import { useSelector } from 'react-redux';
+import RECORD_TYPES from '../enums';
 
 /*
 link object:
@@ -62,7 +62,7 @@ link object:
     },
 ]
 */
-import type { LinkStore } from "../slices";
+import type { LinkStore } from '../slices';
 
 const QueryResultDisplay = (props: {}) => {
   const recordList = useSelector((state: LinkStore) => state.links.recordList);
@@ -114,9 +114,10 @@ const QueryResultDisplay = (props: {}) => {
   numberOfLinks: 0,    // assume 0 
   */
   return (
-    <div className="displayBox">
-      <h4 className="title-heading">Links</h4>
-      {displaySelector === "" ? null : links}
+    <div>
+      <h4 className='title-heading'>Links</h4>
+
+      <div className='displayBox'>{displaySelector === '' ? null : links}</div>
     </div>
   );
 };

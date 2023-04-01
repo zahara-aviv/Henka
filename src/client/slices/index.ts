@@ -1,6 +1,6 @@
-import { createSlice } from "@reduxjs/toolkit";
-import RECORD_TYPES from "../enums";
-import { STATE_NAMES } from "../enums";
+import { createSlice } from '@reduxjs/toolkit';
+import RECORD_TYPES from '../enums';
+import { STATE_NAMES } from '../enums';
 
 export type LinkState = {
   totalRecords: number;
@@ -58,22 +58,22 @@ export type LinkRecord = {
 const initialState: LinkState = {
   //convert to an immutable type
   totalRecords: 0,
-  recordType: "",
+  recordType: '',
   showModal: false,
-  displaySelector: "",
-  formDisplaySelector: "",
+  displaySelector: '',
+  formDisplaySelector: '',
   totalLinks: 0,
   recordList: {},
   deleteLinkList: {},
   updateLinkList: {},
-  candidateRecordName: "",
-  candidateRecordType: "",
-  candidateRecordURL: "",
-  candidateDescription: "",
+  candidateRecordName: '',
+  candidateRecordType: '',
+  candidateRecordURL: '',
+  candidateDescription: '',
   // candidateRecordList: [],
   currentContext: undefined,
   lastRecordId: 0,
-  searchString: "",
+  searchString: '',
   buttonStates: undefined,
 };
 
@@ -82,7 +82,7 @@ export type LinkStore = {
 };
 
 const linkRecordSlice = createSlice({
-  name: "links",
+  name: 'links',
   initialState,
   reducers: {
     setSearchString(state, action) {
@@ -128,15 +128,15 @@ const linkRecordSlice = createSlice({
       const { _id } = action.payload;
       if (
         _id !== undefined &&
-        typeof _id === "number" &&
-        "state" in action.payload
+        typeof _id === 'number' &&
+        'state' in action.payload
       ) {
         const { up, down } = action.payload.state;
         if (
           up !== undefined &&
           down !== undefined &&
-          typeof up === "boolean" &&
-          typeof down === "boolean"
+          typeof up === 'boolean' &&
+          typeof down === 'boolean'
         )
           state.buttonStates = Object.assign({}, state.buttonStates, {
             [_id]: { state: { up, down } },

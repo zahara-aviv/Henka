@@ -9,12 +9,12 @@
  * ************************************
  */
 
-import React from "react";
+import React from 'react';
 // import actions from action creators file
-import EntryCreator from "../components/EntryCreator";
+import EntryCreator from '../components/EntryCreator';
 
 const EntryContainer = (props: {}) => (
-  <div className="innerbox">
+  <div className='innerbox'>
     <EntryCreator />
   </div>
 );
